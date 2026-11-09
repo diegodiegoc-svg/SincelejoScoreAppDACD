@@ -1,0 +1,1259 @@
+{
+  "info": {
+    "_postman_id": "c7e8461a-3a9d-48ef-bf74-0f6244f71a92",
+    "name": "SincelejoScore API",
+    "description": "Colección oficial de endpoints de SincelejoScore (.NET 8 Web API + MySQL) para la gestión multideportiva de torneos, fixture round-robin, mesa técnica en vivo, estadísticas y carga masiva.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5291",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Autenticación (Auth)",
+      "item": [
+        {
+          "name": "Login SuperAdmin (Exitoso)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"admin123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            },
+            "description": "Inicio de sesión para SuperAdmin. Retorna perfil con rol SUPERADMIN y torneoId null."
+          }
+        },
+        {
+          "name": "Login Planillero (Exitoso)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"planillero1\",\n  \"password\": \"mesa123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            },
+            "description": "Inicio de sesión para Planillero de mesa asignado al Torneo 1."
+          }
+        },
+        {
+          "name": "Login Fallido (Credenciales Inválidas)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"passwordIncorrecto\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            },
+            "description": "Prueba de error: Retorna 401 Unauthorized con mensaje de error."
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Deportes",
+      "item": [
+        {
+          "name": "Listar todos los deportes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/deportes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "deportes"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Obtener deporte por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/deportes/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "deportes",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Crear nuevo deporte",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Fútbol Sala\",\n  \"jugadoresPorEquipo\": 5,\n  \"duracionPeriodoMinutos\": 20,\n  \"cantidadPeriodos\": 2,\n  \"tipoPeriodo\": \"Tiempo\",\n  \"unidadMarcador\": \"Goles\",\n  \"descansoMinutos\": 10,\n  \"permiteEmpate\": true,\n  \"tieneRelojActivo\": true,\n  \"activo\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/deportes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "deportes"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Actualizar deporte",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": 1,\n  \"nombre\": \"Baloncesto Profesional\",\n  \"jugadoresPorEquipo\": 5,\n  \"duracionPeriodoMinutos\": 10,\n  \"cantidadPeriodos\": 4,\n  \"tipoPeriodo\": \"Cuarto\",\n  \"unidadMarcador\": \"Puntos\",\n  \"descansoMinutos\": 15,\n  \"permiteEmpate\": false,\n  \"tieneRelojActivo\": true,\n  \"activo\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/deportes/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "deportes",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Eliminar deporte",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/deportes/99",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "deportes",
+                "99"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Torneos",
+      "item": [
+        {
+          "name": "Listar todos los torneos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/torneos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "torneos"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Obtener torneo por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/torneos/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "torneos",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Listar torneos por Deporte ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/torneos/deporte/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "torneos",
+                "deporte",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Crear nuevo torneo (Regla Sede Fija)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"COPA SINCELEJO ÉLITE 2026\",\n  \"deporteId\": 3,\n  \"canchaSedeId\": 1,\n  \"esMulticancha\": false,\n  \"temporada\": \"2026\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/torneos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "torneos"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Actualizar torneo",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": 1,\n  \"nombre\": \"LIBASU INFANTIL FEMENINO CLAUSURA\",\n  \"deporteId\": 1,\n  \"canchaSedeId\": 28,\n  \"esMulticancha\": false,\n  \"temporada\": \"2026\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/torneos/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "torneos",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Eliminar torneo",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/torneos/99",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "torneos",
+                "99"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Canchas (Sedes Fijas)",
+      "item": [
+        {
+          "name": "Listar todas las canchas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/canchas",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "canchas"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Obtener cancha por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/canchas/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "canchas",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Crear nueva cancha",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"CANCHA MULTIDEPORTIVA SAN VICENTE\",\n  \"direccion\": \"Calle 25 # 14-30, Sincelejo\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/canchas",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "canchas"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Actualizar cancha",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": 1,\n  \"nombre\": \"CANCHA ALMAGRARIO RENOVADA\",\n  \"direccion\": \"Sector Almagrario, Sincelejo\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/canchas/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "canchas",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Eliminar cancha",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/canchas/99",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "canchas",
+                "99"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Equipos e Inscripciones",
+      "item": [
+        {
+          "name": "Listar todos los equipos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/equipos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "equipos"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Obtener equipo por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/equipos/23",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "equipos",
+                "23"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Crear equipo e inscribir a torneo",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Halcones Dorados de Sucre\",\n  \"delegacion\": \"Sincelejo, Sucre\",\n  \"torneoId\": 1\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/equipos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "equipos"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Actualizar equipo",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": 23,\n  \"nombre\": \"Atlético Sincelejo #1 Élite\",\n  \"delegacion\": \"Sincelejo\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/equipos/23",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "equipos",
+                "23"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Eliminar equipo",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/equipos/999",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "equipos",
+                "999"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Listar equipos de un torneo",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/torneoequipos/torneo/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "torneoequipos",
+                "torneo",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Asociar equipo existente a torneo",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"torneoId\": 1,\n  \"equipoId\": 4\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/torneoequipos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "torneoequipos"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Carga Masiva de Equipos (Excel multipart)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "archivo",
+                  "type": "file",
+                  "src": "plantilla_sincelejoscore.xlsx",
+                  "description": "Archivo Excel .xlsx con columnas: Nombre, Delegacion, Torneo, Deporte"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/equipos/cargar-excel",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "equipos",
+                "cargar-excel"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. Jugadores y Nóminas",
+      "item": [
+        {
+          "name": "Listar todos los jugadores",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/jugadores",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "jugadores"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Obtener jugador por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/jugadores/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "jugadores",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Listar jugadores de un equipo (Nómina)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/jugadores/equipo/23",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "jugadores",
+                "equipo",
+                "23"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Crear jugador individual",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cedula\": \"1102847999\",\n  \"nombre\": \"Esteban Camilo Montes\",\n  \"equipoId\": 23,\n  \"numeroCamiseta\": 10,\n  \"posicion\": \"Alero\",\n  \"edad\": 21,\n  \"estatura\": 1.88\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/jugadores",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "jugadores"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Actualizar jugador",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": 1,\n  \"cedula\": \"1102847001\",\n  \"nombre\": \"Carlos Mario Pérez Gómez\",\n  \"equipoId\": 23,\n  \"numeroCamiseta\": 11,\n  \"posicion\": \"Base\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/jugadores/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "jugadores",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Eliminar jugador",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/jugadores/999",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "jugadores",
+                "999"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Carga Masiva de Jugadores (Excel multipart)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "archivo",
+                  "type": "file",
+                  "src": "plantilla_sincelejoscore.xlsx",
+                  "description": "Archivo Excel .xlsx con columnas: Nombre, Cedula, NumeroCamiseta, Posicion, Equipo, Torneo, Deporte"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/jugadores/cargar-excel",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "jugadores",
+                "cargar-excel"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "7. Programación y Fixture (Round-Robin)",
+      "item": [
+        {
+          "name": "Generar Fixture Round-Robin (1 Vuelta)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/partidos/generar-fixture/1?numeroDeVueltas=1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "partidos",
+                "generar-fixture",
+                "1"
+              ],
+              "query": [
+                {
+                  "key": "numeroDeVueltas",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Genera automáticamente el fixture Round-Robin para 1 vuelta (soporta número impar con fecha libre)."
+          }
+        },
+        {
+          "name": "Generar Fixture Round-Robin (2 Vueltas - Ida y Vuelta)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/partidos/generar-fixture/1?numeroDeVueltas=2",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "partidos",
+                "generar-fixture",
+                "1"
+              ],
+              "query": [
+                {
+                  "key": "numeroDeVueltas",
+                  "value": "2"
+                }
+              ]
+            },
+            "description": "Genera fixture para 2 vueltas invirtiendo localías en la segunda vuelta."
+          }
+        },
+        {
+          "name": "Listar todos los partidos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/partidos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "partidos"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Obtener partido por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/partidos/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "partidos",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Listar partidos de un torneo",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/partidos/torneo/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "partidos",
+                "torneo",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Listar partidos de un torneo filtrados por estado",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/partidos/torneo/1?estado=EN_JUEGO",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "partidos",
+                "torneo",
+                "1"
+              ],
+              "query": [
+                {
+                  "key": "estado",
+                  "value": "EN_JUEGO"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Programar partido manual",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"torneoId\": 1,\n  \"jornada\": 1,\n  \"canchaId\": 28,\n  \"equipoLocalId\": 23,\n  \"equipoVisitanteId\": 24,\n  \"puntosLocal\": 0,\n  \"puntosVisitante\": 0,\n  \"estado\": \"PROGRAMADO\",\n  \"estadoDetalle\": \"PROGRAMADO\",\n  \"fechaHora\": \"2026-11-15T18:00:00\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/partidos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "partidos"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Actualizar datos de partido",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": 1,\n  \"torneoId\": 1,\n  \"jornada\": 1,\n  \"canchaId\": 28,\n  \"equipoLocalId\": 23,\n  \"equipoVisitanteId\": 24,\n  \"puntosLocal\": 0,\n  \"puntosVisitante\": 0,\n  \"estado\": \"PROGRAMADO\",\n  \"estadoDetalle\": \"REPROGRAMADO\",\n  \"fechaHora\": \"2026-11-16T19:00:00\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/partidos/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "partidos",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Eliminar partido",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/partidos/999",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "partidos",
+                "999"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "8. Mesa Técnica y Marcadores en Vivo",
+      "item": [
+        {
+          "name": "Cambiar estado a EN_JUEGO (Iniciar Partido)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"puntosLocal\": 0,\n  \"puntosVisitante\": 0,\n  \"estado\": \"EN_JUEGO\",\n  \"estadoDetalle\": \"1er Tiempo\",\n  \"minutoActual\": 1\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/partidos/1/marcador",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "partidos",
+                "1",
+                "marcador"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Actualizar tanteador en vivo (Goles/Puntos)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"puntosLocal\": 2,\n  \"puntosVisitante\": 1,\n  \"estado\": \"EN_JUEGO\",\n  \"estadoDetalle\": \"2do Tiempo\",\n  \"minutoActual\": 65\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/partidos/1/marcador",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "partidos",
+                "1",
+                "marcador"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Finalizar Partido (FINALIZADO)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"puntosLocal\": 2,\n  \"puntosVisitante\": 1,\n  \"estado\": \"FINALIZADO\",\n  \"estadoDetalle\": \"FINALIZADO\",\n  \"minutoActual\": 90\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/partidos/1/marcador",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "partidos",
+                "1",
+                "marcador"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Listar incidencias/eventos de un partido",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/eventospartido/partido/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "eventospartido",
+                "partido",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Registrar evento (GOL / PUNTO)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"partidoId\": 1,\n  \"equipoId\": 23,\n  \"jugadorId\": 1,\n  \"tipoEvento\": \"GOL\",\n  \"minutoOPeriodo\": \"34'\",\n  \"valorPuntos\": 1,\n  \"comentario\": \"Gol de remate cruzado con pierna derecha\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/eventospartido",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "eventospartido"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Registrar evento (FALTA / TARJETA)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"partidoId\": 1,\n  \"equipoId\": 24,\n  \"jugadorId\": 2,\n  \"tipoEvento\": \"TARJETA_AMARILLA\",\n  \"minutoOPeriodo\": \"52'\",\n  \"valorPuntos\": 0,\n  \"comentario\": \"Falta táctica en mitad de cancha\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/eventospartido",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "eventospartido"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Actualizar evento de partido",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": 1,\n  \"partidoId\": 1,\n  \"equipoId\": 23,\n  \"jugadorId\": 1,\n  \"tipoEvento\": \"GOL\",\n  \"minutoOPeriodo\": \"35'\",\n  \"valorPuntos\": 1,\n  \"comentario\": \"Gol corregido a minuto 35\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/eventospartido/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "eventospartido",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Eliminar evento de partido",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/eventospartido/999",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "eventospartido",
+                "999"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "9. Tabla de Posiciones y Estadísticas",
+      "item": [
+        {
+          "name": "Consultar Tabla de Posiciones de Torneo",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/tablaposiciones/torneo/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "tablaposiciones",
+                "torneo",
+                "1"
+              ]
+            },
+            "description": "Calcula en tiempo real según el deporte (Fútbol: 3-1-0 pts; Baloncesto: 2-1 pts)."
+          }
+        },
+        {
+          "name": "Consultar Tabla de Goleadores / Artilleros",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/goleadores/torneo/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "goleadores",
+                "torneo",
+                "1"
+              ]
+            },
+            "description": "Lista ordenada de jugadores con mayor cantidad de goles registrados en el torneo."
+          }
+        }
+      ]
+    }
+  ]
+}
