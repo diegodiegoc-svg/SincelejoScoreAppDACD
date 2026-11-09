@@ -26,6 +26,7 @@
         <button class="admin-tab-btn" data-tab="tab-equipos">🛡️ 2. Equipos y Nóminas</button>
         <button class="admin-tab-btn" data-tab="tab-fixture">📅 3. Programación y Fixture</button>
         <button class="admin-tab-btn" data-tab="tab-mesa">⏱️ 4. Mesa Técnica en Vivo</button>
+        <button class="admin-tab-btn" data-tab="tab-deportes">🏅 5. Deportes</button>
     </nav>
 
     <!-- Contenedor Principal -->
@@ -697,6 +698,113 @@
                 </div>
             </div>
             </div> <!-- Fin #mesa-vista-activa -->
+        </section>
+
+        <!-- ===================================================================
+             PESTAÑA 5: GESTIÓN DE DEPORTES
+             =================================================================== -->
+        <section id="tab-deportes" class="admin-tab-pane hidden">
+            <!-- Formulario de Deporte -->
+            <div class="admin-card">
+                <div class="admin-card-header">
+                    <h3 class="admin-card-title" id="deporte-form-title">🏅 Registrar Nuevo Deporte</h3>
+                    <button type="button" class="btn-secondary" id="btn-limpiar-deporte">Nuevo / Limpiar</button>
+                </div>
+                <form id="form-deporte">
+                    <input type="hidden" id="deporte-id">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="deporte-nombre">Nombre del Deporte *</label>
+                            <input type="text" id="deporte-nombre" class="form-control" placeholder="Ej. Fútbol, Baloncesto, Tenis..." required>
+                        </div>
+                        <div class="form-group">
+                            <label for="deporte-jugadores-equipo">Cantidad de Jugadores por Equipo</label>
+                            <input type="number" id="deporte-jugadores-equipo" class="form-control" placeholder="Ej. 11, 5, 6..." min="1" max="50">
+                        </div>
+                        <div class="form-group">
+                            <label for="deporte-duracion-periodo">Duración por Periodo (minutos) *</label>
+                            <input type="number" id="deporte-duracion-periodo" class="form-control" placeholder="Ej. 45, 20, 10..." min="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="deporte-cantidad-periodos">Cantidad de Tiempos / Periodos *</label>
+                            <input type="number" id="deporte-cantidad-periodos" class="form-control" placeholder="Ej. 2, 4, 9..." min="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="deporte-tipo-periodo">Tipo de Periodo</label>
+                            <select id="deporte-tipo-periodo" class="form-control">
+                                <option value="Tiempo">Tiempo (Fútbol / Microfútbol)</option>
+                                <option value="Cuarto">Cuarto (Baloncesto)</option>
+                                <option value="Set">Set (Voleibol / Tenis)</option>
+                                <option value="Inning">Inning (Béisbol / Sóftbol)</option>
+                                <option value="Periodo">Periodo General</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="deporte-unidad-marcador">Unidad de Marcador</label>
+                            <select id="deporte-unidad-marcador" class="form-control">
+                                <option value="Goles">Goles</option>
+                                <option value="Puntos">Puntos</option>
+                                <option value="Carreras">Carreras</option>
+                                <option value="Sets">Sets</option>
+                                <option value="Tantos">Tantos</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="deporte-descanso-minutos">Descanso entre periodos (min)</label>
+                            <input type="number" id="deporte-descanso-minutos" class="form-control" value="15" min="0">
+                        </div>
+                        <div class="form-group" style="display: flex; flex-direction: column; justify-content: center; gap: 8px;">
+                            <label class="form-checkbox-label">
+                                <input type="checkbox" id="deporte-permite-empate">
+                                <span>Permite Empate</span>
+                            </label>
+                            <label class="form-checkbox-label">
+                                <input type="checkbox" id="deporte-tiene-reloj" checked>
+                                <span>Tiene Reloj Activo (Cronómetro)</span>
+                            </label>
+                            <label class="form-checkbox-label">
+                                <input type="checkbox" id="deporte-estado" checked>
+                                <span><strong>Estado: Activo</strong></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 10px; margin-top: 15px;">
+                        <button type="submit" class="btn-primary" id="btn-guardar-deporte">💾 Guardar Deporte</button>
+                        <button type="button" class="btn-secondary" id="btn-cancelar-deporte">Cancelar Edición</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Tabla de Deportes Registrados -->
+            <div class="admin-card">
+                <div class="admin-card-header">
+                    <h3 class="admin-card-title">📋 Deportes Registrados</h3>
+                    <input type="text" id="filtro-buscar-deporte" class="form-control" placeholder="Buscar deporte..." style="max-width: 280px;">
+                </div>
+                <div class="admin-table-wrapper">
+                    <table class="admin-table" id="tabla-deportes">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Nombre</th>
+                                <th>Periodos</th>
+                                <th>Duración / Tiempo</th>
+                                <th>Descanso</th>
+                                <th>Duración Total</th>
+                                <th>Unidad</th>
+                                <th>Reloj / Empate</th>
+                                <th>Estado</th>
+                                <th style="text-align: center;">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-deportes-body">
+                            <tr>
+                                <td colspan="10" style="text-align: center; color: #888; padding: 20px;">Cargando deportes...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </section>
 
     </main>

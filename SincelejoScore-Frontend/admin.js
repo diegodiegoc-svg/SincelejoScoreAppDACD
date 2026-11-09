@@ -225,6 +225,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     await cargarTorneos();
     await cargarEquiposGlobal();
     await cargarEquipos();
+    await cargarDeportesAdmin();
 });
 
 // ============================================================================
@@ -362,6 +363,8 @@ function cambiarPestana(targetTabId) {
         if (torSelect && torSelect.value) {
             cargarPartidosFixture(torSelect.value);
         }
+    } else if (targetTabId === 'tab-deportes') {
+        cargarDeportesAdmin();
     }
 }
 
@@ -465,6 +468,264 @@ async function cargarDeportes() {
         console.error('Error cargando deportes:', err);
     }
 }
+
+// ============================================================================
+// PESTAÑA 5: GESTIÓN DE DEPORTES (CRUD COMPLETO)
+// ============================================================================
+let deportesAdminLista = [];
+
+async function cargarDeportesAdmin() {
+    const tbody = document.getElementById('tabla-deportes-body');
+    if (tbody) {
+        tbody.innerHTML = `<tr><td colspan="10" style="text-align:center; color:#888; padding:20px;">Cargando deportes...</td></tr>`;
+    }
+
+    try {
+        const res = await fetch(`${API_URL}/deportes`);
+        if (!res.ok) throw new Error('Error al consultar lista de deportes');
+        const data = await res.json();
+        deportesAdminLista = Array.isArray(data) ? data : [];
+        state.deportes = deportesAdminLista;
+
+        // Mantener actualizado el select de torneos
+        const select = document.getElementById('torneo-deporte');
+        if (select) {
+            const valSel = select.value;
+            select.innerHTML = '<option value="">-- Selecciona un deporte --</option>' +
+                state.deportes.map(d => `<option value="${d.id || d.Id}">${d.nombre || d.Nombre}</option>`).join('');
+            if (valSel) select.value = valSel;
+        }
+
+        renderizarTablaDeportes(deportesAdminLista);
+    } catch (err) {
+        console.error('Error en cargarDeportesAdmin:', err);
+        if (tbody) {
+            tbody.innerHTML = `<tr><td colspan="10" style="text-align:center; color:#ef4444; padding:20px;">No se pudieron cargar los deportes: ${err.message}</td></tr>`;
+        }
+    }
+}
+
+function renderizarTablaDeportes(deportes) {
+    const tbody = document.getElementById('tabla-deportes-body');
+    if (!tbody) return;
+
+    if (!deportes || deportes.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="10" style="text-align:center; color:#888; padding:24px;">No hay deportes registrados. Crea el primero arriba.</td></tr>`;
+        return;
+    }
+
+    tbody.innerHTML = deportes.map(d => {
+        const id = d.id ?? d.Id;
+        const nombre = d.nombre ?? d.Nombre ?? 'Sin Nombre';
+        const tipoPeriodo = d.tipoPeriodo ?? d.TipoPeriodo ?? 'Tiempo';
+        const cantPeriodos = d.cantidadPeriodosBase ?? d.CantidadPeriodosBase ?? 2;
+        const duracion = d.duracionPeriodoMinutos ?? d.DuracionPeriodoMinutos ?? 0;
+        const descanso = d.descansoMinutos ?? d.DescansoMinutos ?? 0;
+        const duracionTotal = d.duracionTotalEstimadaMinutos ?? d.DuracionTotalEstimadaMinutos ?? ((cantPeriodos * duracion) + descanso);
+        const unidad = d.unidadMarcador ?? d.UnidadMarcador ?? 'Puntos';
+        const permiteEmpate = Boolean(d.permiteEmpate ?? d.PermiteEmpate);
+        const tieneReloj = Boolean(d.tieneReloj ?? d.TieneReloj ?? true);
+
+        const relojBadge = tieneReloj 
+            ? `<span style="color:#10b981; font-weight:700;">⏱️ Con reloj</span>` 
+            : `<span style="color:#a1a1aa;">Sin reloj</span>`;
+        const empateBadge = permiteEmpate 
+            ? `<span style="color:#00d2ff; font-size:11px;">(Empate Sí)</span>` 
+            : `<span style="color:#64748b; font-size:11px;">(Sin Empate)</span>`;
+
+        return `
+            <tr>
+                <td><strong>#${id}</strong></td>
+                <td><strong style="color:#fff; font-size:13.5px;">${nombre}</strong></td>
+                <td><span style="color:#e1e1e6;">${cantPeriodos} ${tipoPeriodo}(s)</span></td>
+                <td><span style="color:#e1e1e6;">${duracion} min</span></td>
+                <td><span style="color:#888;">${descanso} min</span></td>
+                <td><strong style="color:#ff0044;">${duracionTotal} min</strong></td>
+                <td><span style="color:#38bdf8;">${unidad}</span></td>
+                <td><div>${relojBadge}</div><div>${empateBadge}</div></td>
+                <td><span class="badge-deporte-activo">ACTIVO</span></td>
+                <td style="text-align:center;">
+                    <div style="display:flex; justify-content:center; gap:6px;">
+                        <button type="button" class="btn-action-edit" onclick="editarDeporte(${id})" title="Editar Deporte">✏️ Editar</button>
+                        <button type="button" class="btn-action-del" onclick="eliminarDeporte(${id})" title="Eliminar Deporte">🗑️</button>
+                    </div>
+                </td>
+            </tr>
+        `;
+    }).join('');
+}
+
+function limpiarFormDeporte() {
+    const form = document.getElementById('form-deporte');
+    if (form) form.reset();
+    const idInput = document.getElementById('deporte-id');
+    if (idInput) idInput.value = '';
+    const title = document.getElementById('deporte-form-title');
+    if (title) title.textContent = '🏅 Registrar Nuevo Deporte';
+    const btnSubmit = document.getElementById('btn-guardar-deporte');
+    if (btnSubmit) btnSubmit.textContent = '💾 Guardar Deporte';
+}
+
+window.editarDeporte = function(id) {
+    const dep = deportesAdminLista.find(d => (d.id ?? d.Id) === id);
+    if (!dep) {
+        mostrarToast('No se encontró el deporte seleccionado.', 'error');
+        return;
+    }
+
+    document.getElementById('deporte-id').value = dep.id ?? dep.Id;
+    document.getElementById('deporte-nombre').value = dep.nombre ?? dep.Nombre ?? '';
+    document.getElementById('deporte-cantidad-periodos').value = dep.cantidadPeriodosBase ?? dep.CantidadPeriodosBase ?? 2;
+    document.getElementById('deporte-duracion-periodo').value = dep.duracionPeriodoMinutos ?? dep.DuracionPeriodoMinutos ?? 0;
+    document.getElementById('deporte-descanso-minutos').value = dep.descansoMinutos ?? dep.DescansoMinutos ?? 15;
+    document.getElementById('deporte-tipo-periodo').value = dep.tipoPeriodo ?? dep.TipoPeriodo ?? 'Tiempo';
+    document.getElementById('deporte-unidad-marcador').value = dep.unidadMarcador ?? dep.UnidadMarcador ?? 'Puntos';
+    document.getElementById('deporte-permite-empate').checked = Boolean(dep.permiteEmpate ?? dep.PermiteEmpate);
+    document.getElementById('deporte-tiene-reloj').checked = Boolean(dep.tieneReloj ?? dep.TieneReloj ?? true);
+    document.getElementById('deporte-estado').checked = true;
+
+    const title = document.getElementById('deporte-form-title');
+    if (title) title.textContent = `✏️ Editar Deporte: ${dep.nombre ?? dep.Nombre}`;
+    const btnSubmit = document.getElementById('btn-guardar-deporte');
+    if (btnSubmit) btnSubmit.textContent = '💾 Actualizar Deporte';
+
+    document.getElementById('deporte-nombre')?.focus();
+};
+
+window.guardarDeporte = async function(e) {
+    if (e && e.preventDefault) e.preventDefault();
+
+    const id = document.getElementById('deporte-id')?.value;
+    const nombre = document.getElementById('deporte-nombre')?.value.trim();
+    const cantPeriodos = parseInt(document.getElementById('deporte-cantidad-periodos')?.value, 10);
+    const duracionPeriodo = parseInt(document.getElementById('deporte-duracion-periodo')?.value, 10);
+    const descansoMinutos = parseInt(document.getElementById('deporte-descanso-minutos')?.value, 10) || 0;
+    const tipoPeriodo = document.getElementById('deporte-tipo-periodo')?.value || 'Tiempo';
+    const unidadMarcador = document.getElementById('deporte-unidad-marcador')?.value || 'Puntos';
+    const permiteEmpate = document.getElementById('deporte-permite-empate')?.checked || false;
+    const tieneReloj = document.getElementById('deporte-tiene-reloj')?.checked || false;
+    const duracionTotal = (cantPeriodos * duracionPeriodo) + descansoMinutos;
+
+    if (!nombre) {
+        mostrarToast('El nombre del deporte es obligatorio.', 'error');
+        return;
+    }
+    if (isNaN(cantPeriodos) || cantPeriodos < 1) {
+        mostrarToast('La cantidad de tiempos o periodos debe ser mayor a 0.', 'error');
+        return;
+    }
+    if (isNaN(duracionPeriodo) || duracionPeriodo < 0) {
+        mostrarToast('La duración por periodo debe ser válida.', 'error');
+        return;
+    }
+
+    const payload = {
+        nombre: nombre,
+        tipoPeriodo: tipoPeriodo,
+        cantidadPeriodosBase: cantPeriodos,
+        duracionPeriodoMinutos: duracionPeriodo,
+        descansoMinutos: descansoMinutos,
+        duracionTotalEstimadaMinutos: duracionTotal,
+        permiteEmpate: permiteEmpate,
+        tieneReloj: tieneReloj,
+        unidadMarcador: unidadMarcador
+    };
+
+    const btnSubmit = document.getElementById('btn-guardar-deporte');
+    if (btnSubmit) {
+        btnSubmit.disabled = true;
+        btnSubmit.textContent = '⏳ Guardando...';
+    }
+
+    try {
+        let res;
+        if (id) {
+            payload.id = parseInt(id, 10);
+            res = await fetch(`${API_URL}/deportes/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+        } else {
+            res = await fetch(`${API_URL}/deportes`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+        }
+
+        if (!res.ok) {
+            const errTxt = await res.text().catch(() => '');
+            throw new Error(errTxt || `Error HTTP ${res.status}`);
+        }
+
+        mostrarToast(id ? 'Deporte actualizado con éxito.' : 'Deporte registrado con éxito.', 'exito');
+        limpiarFormDeporte();
+        await cargarDeportesAdmin();
+        await cargarDeportes();
+    } catch (err) {
+        console.error('Error al guardar deporte:', err);
+        mostrarToast(`No se pudo guardar el deporte: ${err.message}`, 'error');
+    } finally {
+        if (btnSubmit) {
+            btnSubmit.disabled = false;
+            btnSubmit.textContent = id ? '💾 Actualizar Deporte' : '💾 Guardar Deporte';
+        }
+    }
+};
+
+window.eliminarDeporte = async function(id) {
+    const dep = deportesAdminLista.find(d => (d.id ?? d.Id) === id);
+    const nom = dep ? (dep.nombre ?? dep.Nombre) : `#${id}`;
+
+    const ok = await mostrarConfirmacionModal(
+        `¿Estás seguro de que deseas eliminar el deporte "${nom}"?\n\nNota: Si ya existen torneos vinculados a este deporte, la base de datos protegerá la integridad de los datos.`,
+        '🗑️ Eliminar Deporte',
+        'Sí, Eliminar',
+        'Cancelar'
+    );
+
+    if (!ok) return;
+
+    try {
+        const res = await fetch(`${API_URL}/deportes/${id}`, {
+            method: 'DELETE'
+        });
+
+        if (!res.ok) {
+            if (res.status === 409 || res.status === 500) {
+                throw new Error('No es posible eliminar el deporte porque tiene torneos o partidos asociados en la base de datos.');
+            }
+            throw new Error(`Error ${res.status}: no se pudo eliminar el deporte.`);
+        }
+
+        mostrarToast(`Deporte "${nom}" eliminado exitosamente.`, 'exito');
+        if (document.getElementById('deporte-id')?.value == id) {
+            limpiarFormDeporte();
+        }
+        await cargarDeportesAdmin();
+        await cargarDeportes();
+    } catch (err) {
+        console.error('Error al eliminar deporte:', err);
+        mostrarToast(err.message, 'error');
+    }
+};
+
+// Event Listeners Módulo Deportes
+document.getElementById('filtro-buscar-deporte')?.addEventListener('input', (e) => {
+    const texto = e.target.value.toLowerCase().trim();
+    const filtrados = deportesAdminLista.filter(d => {
+        const nom = (d.nombre || d.Nombre || '').toLowerCase();
+        const tipo = (d.tipoPeriodo || d.TipoPeriodo || '').toLowerCase();
+        const unidad = (d.unidadMarcador || d.UnidadMarcador || '').toLowerCase();
+        return nom.includes(texto) || tipo.includes(texto) || unidad.includes(texto);
+    });
+    renderizarTablaDeportes(filtrados);
+});
+
+document.getElementById('btn-limpiar-deporte')?.addEventListener('click', limpiarFormDeporte);
+document.getElementById('btn-cancelar-deporte')?.addEventListener('click', limpiarFormDeporte);
+document.getElementById('form-deporte')?.addEventListener('submit', window.guardarDeporte);
 
 async function cargarCanchas() {
     try {

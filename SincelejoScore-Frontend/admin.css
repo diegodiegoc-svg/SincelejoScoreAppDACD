@@ -796,4 +796,74 @@ select.form-control option {
     }
 }
 
+/* ==========================================================================
+   MÓDULO 5: GESTIÓN DE DEPORTES
+   ========================================================================== */
+.btn-action-edit {
+    background: transparent;
+    color: #38bdf8;
+    border: 1px solid #0284c7;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.btn-action-edit:hover {
+    background-color: #0284c7;
+    color: #ffffff;
+    box-shadow: 0 0 8px rgba(2, 132, 199, 0.4);
+}
+
+.btn-action-del {
+    background: transparent;
+    color: #f43f5e;
+    border: 1px solid #e11d48;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.btn-action-del:hover {
+    background-color: #e11d48;
+    color: #ffffff;
+    box-shadow: 0 0 8px rgba(225, 29, 72, 0.4);
+}
+
+.badge-deporte-activo {
+    background: rgba(16, 185, 129, 0.15);
+    color: #10b981;
+    border: 1px solid #10b981;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    display: inline-block;
+    letter-spacing: 0.5px;
+}
+
+.badge-deporte-inactivo {
+    background: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
+    border: 1px solid #ef4444;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    display: inline-block;
+    letter-spacing: 0.5px;
+}
+
+
 
