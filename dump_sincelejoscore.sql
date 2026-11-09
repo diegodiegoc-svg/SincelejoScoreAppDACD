@@ -338,6 +338,41 @@ INSERT INTO `torneos` VALUES (1,'LIBASU INFANTIL FEMENINO',1,28,0,'2026'),(2,'LI
 UNLOCK TABLES;
 
 --
+-- Table structure for table `usuarios`
+--
+
+DROP TABLE IF EXISTS `usuarios`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `usuarios` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `username` varchar(50) NOT NULL,
+  `password_hash` varchar(255) NOT NULL,
+  `nombre_completo` varchar(150) NOT NULL,
+  `rol` varchar(30) NOT NULL,
+  `torneo_id` int DEFAULT NULL,
+  `activo` tinyint(1) NOT NULL DEFAULT '1',
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uq_usuarios_username` (`username`),
+  KEY `fk_usuarios_torneo` (`torneo_id`),
+  CONSTRAINT `fk_usuarios_torneo` FOREIGN KEY (`torneo_id`) REFERENCES `torneos` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `usuarios`
+--
+
+LOCK TABLES `usuarios` WRITE;
+/*!40000 ALTER TABLE `usuarios` DISABLE KEYS */;
+INSERT INTO `usuarios` (`id`, `username`, `password_hash`, `nombre_completo`, `rol`, `torneo_id`, `activo`, `created_at`) VALUES 
+(1,'admin','admin123','Administrador General','SUPERADMIN',NULL,1,NOW()),
+(2,'planillero1','mesa123','Planillero Mesa 1','PLANILLERO',1,1,NOW());
+/*!40000 ALTER TABLE `usuarios` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Temporary view structure for view `vista_lideres_anotacion`
 --
 
