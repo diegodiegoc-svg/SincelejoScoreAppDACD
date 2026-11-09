@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SincelejoScore - Acceso al Sistema</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="admin.css">
+    <style>
+        body.login-page {
+            background-color: #0d0e12;
+            background-image: 
+                radial-gradient(circle at 50% 20%, rgba(255, 0, 68, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(0, 210, 255, 0.05) 0%, transparent 40%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #e1e1e6;
+        }
+
+        .login-card {
+            background: #16161c;
+            border: 1px solid #2a2a34;
+            border-radius: 12px;
+            box-shadow: 0 16px 45px rgba(0, 0, 0, 0.75);
+            max-width: 420px;
+            width: 100%;
+            padding: 36px 30px;
+            box-sizing: border-box;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #ff0044, #ff5e00, #ff0044);
+        }
+
+        .login-logo {
+            font-size: 26px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            color: #ffffff;
+            margin-bottom: 6px;
+        }
+
+        .login-logo span {
+            color: #ff0044;
+        }
+
+        .login-subtitle {
+            color: #8d8d99;
+            font-size: 13.5px;
+            margin: 0 0 24px;
+            font-weight: 500;
+        }
+
+        .login-alert-error {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid #ef4444;
+            color: #fca5a5;
+            border-radius: 8px;
+            padding: 12px 14px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-align: left;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .login-alert-error.hidden {
+            display: none !important;
+        }
+
+        .login-field {
+            margin-bottom: 18px;
+            text-align: left;
+        }
+
+        .login-field label {
+            display: block;
+            font-size: 12.5px;
+            font-weight: 700;
+            color: #c4c4cc;
+            margin-bottom: 7px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .login-field input {
+            width: 100%;
+            background: #0f1015;
+            border: 1px solid #2f303d;
+            border-radius: 6px;
+            padding: 12px 14px;
+            font-size: 14px;
+            color: #ffffff;
+            box-sizing: border-box;
+            transition: all 0.2s ease;
+            outline: none;
+        }
+
+        .login-field input:focus {
+            border-color: #ff0044;
+            box-shadow: 0 0 0 2px rgba(255, 0, 68, 0.25);
+            background: #14141c;
+        }
+
+        .btn-submit-login {
+            width: 100%;
+            background-color: #ff0044;
+            color: #ffffff;
+            border: none;
+            padding: 13px 20px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 800;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+            transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+            margin-top: 6px;
+            box-shadow: 0 4px 14px rgba(255, 0, 68, 0.3);
+        }
+
+        .btn-submit-login:hover:not(:disabled) {
+            background-color: #e6003d;
+            box-shadow: 0 6px 18px rgba(255, 0, 68, 0.45);
+        }
+
+        .btn-submit-login:active:not(:disabled) {
+            transform: scale(0.99);
+        }
+
+        .btn-submit-login:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .login-footer-links {
+            margin-top: 24px;
+            padding-top: 18px;
+            border-top: 1px solid #242530;
+        }
+
+        .btn-volver-publico {
+            color: #a1a1aa;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: color 0.2s;
+        }
+
+        .btn-volver-publico:hover {
+            color: #00d2ff;
+            text-decoration: underline;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="login-page">
+
+    <div class="login-card">
+        <!-- Logotipo y Título Destacado -->
+        <div class="login-logo">
+            SINCELEJO<span>SCORE</span>
+        </div>
+        <p class="login-subtitle">SincelejoScore - Acceso al Sistema</p>
+
+        <!-- Contenedor Visual de Errores / Alertas (inicialmente oculto) -->
+        <div id="login-error-msg" class="login-alert-error hidden" style="display: none;">
+            <span style="font-size: 16px;">⚠️</span>
+            <span id="login-error-text">Usuario o contraseña incorrectos</span>
+        </div>
+
+        <!-- Formulario de Login -->
+        <form id="form-login">
+            <div class="login-field">
+                <label for="login-username">Usuario</label>
+                <input 
+                    type="text" 
+                    id="login-username" 
+                    name="username"
+                    required 
+                    placeholder="Ingresa tu usuario" 
+                    autocomplete="username" 
+                    autofocus>
+            </div>
+
+            <div class="login-field">
+                <label for="login-password">Contraseña</label>
+                <input 
+                    type="password" 
+                    id="login-password" 
+                    name="password"
+                    required 
+                    placeholder="Ingresa tu contraseña" 
+                    autocomplete="current-password">
+            </div>
+
+            <button type="submit" id="btn-login" class="btn-submit-login">
+                Iniciar Sesión
+            </button>
+        </form>
+
+        <!-- Enlace Secundario -->
+        <div class="login-footer-links">
+            <a href="index.html" class="btn-volver-publico">
+                ← Volver a la vista pública de marcadores
+            </a>
+        </div>
+    </div>
+
+    <!-- Lógica de Inicio de Sesión -->
+    <script src="login.js"></script>
+</body>
+</html>

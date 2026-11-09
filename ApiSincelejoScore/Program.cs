@@ -39,6 +39,7 @@ builder.Services.AddScoped<IFixtureService, FixtureService>();
 builder.Services.AddScoped<ITablaPosicionesRepository, TablaPosicionesRepository>();
 builder.Services.AddScoped<IGoleadorRepository, GoleadorRepository>();
 builder.Services.AddScoped<ICanchaRepository, CanchaRepository>();
+builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddHostedService<ApiSincelejoScore.Services.MatchAutomationService>();
 
 var app = builder.Build();

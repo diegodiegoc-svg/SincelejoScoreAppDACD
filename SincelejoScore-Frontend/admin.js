@@ -5,6 +5,112 @@
  * ============================================================================
  */
 
+// ============================================================================
+// GUARDIÁN DE ACCESO INMEDIATO (AUTENTICACIÓN Y SESIÓN)
+// ============================================================================
+(function() {
+    const sesionStr = localStorage.getItem('usuario_sesion');
+    if (!sesionStr) {
+        window.location.replace('login.html');
+        return;
+    }
+    try {
+        const sesionObj = JSON.parse(sesionStr);
+        if (!sesionObj || (!sesionObj.username && !sesionObj.Username && !sesionObj.id && !sesionObj.Id)) {
+            localStorage.removeItem('usuario_sesion');
+            window.location.replace('login.html');
+            return;
+        }
+    } catch (_) {
+        localStorage.removeItem('usuario_sesion');
+        window.location.replace('login.html');
+        return;
+    }
+})();
+
+function cerrarSesion() {
+    localStorage.removeItem('usuario_sesion');
+    window.location.replace('login.html');
+}
+window.cerrarSesion = cerrarSesion;
+
+function obtenerUsuarioSesion() {
+    try {
+        const str = localStorage.getItem('usuario_sesion');
+        return str ? JSON.parse(str) : null;
+    } catch (_) {
+        return null;
+    }
+}
+
+function aplicarInfoSesionYRoles() {
+    const sesion = obtenerUsuarioSesion();
+    if (!sesion) return;
+
+    const nombre = sesion.nombreCompleto || sesion.NombreCompleto || sesion.username || sesion.Username || 'Usuario';
+    const rol = (sesion.rol || sesion.Rol || 'ADMIN').toUpperCase();
+    const torneoIdAsignado = sesion.torneoId ?? sesion.TorneoId ?? null;
+
+    // Pintar nombre y rol en el header
+    const nombreEl = document.getElementById('nombre-usuario-sesion');
+    if (nombreEl) nombreEl.textContent = nombre;
+
+    const rolEl = document.getElementById('rol-usuario-sesion');
+    if (rolEl) {
+        rolEl.textContent = rol;
+        rolEl.className = `rol-usuario-sesion rol-${rol.toLowerCase()}`;
+    }
+
+    // Enlazar evento al botón de cierre de sesión
+    document.getElementById('btn-logout')?.addEventListener('click', cerrarSesion);
+
+    // Adaptación según el Rol
+    if (rol === 'SUPERADMIN') {
+        // Flujo normal: todas las pestañas visibles y selectores habilitados
+    } else if (rol === 'PLANILLERO') {
+        aplicarRestriccionesPlanillero(torneoIdAsignado);
+    }
+}
+
+function aplicarRestriccionesPlanillero(torneoIdAsignado) {
+    // 1. Ocultar de la barra de pestañas los módulos ajenos al planillero
+    const tabsAOcultar = ['tab-torneos', 'tab-equipos', 'tab-deportes'];
+    document.querySelectorAll('.admin-tab-btn').forEach(btn => {
+        const tab = btn.getAttribute('data-tab');
+        if (tabsAOcultar.includes(tab)) {
+            btn.style.display = 'none';
+        }
+    });
+
+    // 2. Ocultar botones de administración ajenos
+    const btnExcel = document.getElementById('btn-abrir-modal-excel');
+    if (btnExcel) btnExcel.style.display = 'none';
+
+    // 3. Activar automáticamente la pestaña de Mesa Técnica
+    cambiarPestana('tab-mesa');
+
+    // 4. Bloquear y seleccionar torneo asignado
+    if (torneoIdAsignado) {
+        const selectsTorneo = [
+            document.getElementById('select-torneo-mesa'),
+            document.getElementById('fixture-torneo-select'),
+            document.getElementById('filtro-equipo-torneo')
+        ];
+
+        selectsTorneo.forEach(sel => {
+            if (sel) {
+                sel.value = torneoIdAsignado;
+                sel.disabled = true;
+                sel.title = 'Torneo asignado exclusivamente a este usuario.';
+            }
+        });
+
+        if (typeof cargarPartidosFixture === 'function') {
+            cargarPartidosFixture(torneoIdAsignado);
+        }
+    }
+}
+
 const API_URL = 'https://apisincelejoscore-production.up.railway.app/api';
 
 // Estado global de la aplicación administrativa
@@ -212,6 +318,9 @@ if (typeof document !== 'undefined' && typeof document.getElementById === 'funct
 // INICIALIZACIÓN
 // ============================================================================
 document.addEventListener('DOMContentLoaded', async () => {
+    // Inicializar visualización de sesión y roles
+    aplicarInfoSesionYRoles();
+
     configurarNavegacionTabs();
     configurarModales();
     configurarEventosMesa();
@@ -787,7 +896,15 @@ function poblarSelectsTorneo(torneos) {
     if (fixtTor) {
         const valorActual = fixtTor.value;
         fixtTor.innerHTML = torneos.map(t => `<option value="${t.id || t.Id}">${t.nombre || t.Nombre} (${obtenerNombreDeporte(t)})</option>`).join('');
-        if (valorActual && torneos.some(t => (t.id || t.Id) == valorActual)) {
+        const sesion = obtenerUsuarioSesion();
+        const rol = (sesion?.rol || sesion?.Rol || '').toUpperCase();
+        const torIdAsignado = sesion?.torneoId ?? sesion?.TorneoId;
+
+        if (rol === 'PLANILLERO' && torIdAsignado) {
+            fixtTor.value = torIdAsignado;
+            fixtTor.disabled = true;
+            fixtTor.title = 'Torneo asignado exclusivamente a este usuario.';
+        } else if (valorActual && torneos.some(t => (t.id || t.Id) == valorActual)) {
             fixtTor.value = valorActual;
         } else if (torneos.length > 0) {
             fixtTor.value = torneos[0].id || torneos[0].Id;
@@ -2077,9 +2194,20 @@ async function cargarTarjetasMesaEnVivo(mostrarLoading = true) {
         const mostrarTodos = document.getElementById('chk-mostrar-todos-partidos-mesa')?.checked;
         
         // Filtrar partidos: ÚNICAMENTE los que están en juego ('EN_JUEGO') o son de HOY (salvo checkbox)
-        const partidosFiltrados = mostrarTodos 
+        let partidosFiltrados = mostrarTodos 
             ? todosPartidos 
             : todosPartidos.filter(p => esPartidoDeHoyOEnJuego(p));
+
+        // Restricción por rol PLANILLERO: solo su torneo asignado
+        const sesion = obtenerUsuarioSesion();
+        const rol = (sesion?.rol || sesion?.Rol || '').toUpperCase();
+        const torIdAsignado = sesion?.torneoId ?? sesion?.TorneoId;
+        if (rol === 'PLANILLERO' && torIdAsignado) {
+            partidosFiltrados = partidosFiltrados.filter(p => {
+                const pTorId = p.torneoId || p.TorneoId;
+                return String(pTorId) === String(torIdAsignado);
+            });
+        }
 
         if (partidosFiltrados.length === 0) {
             container.innerHTML = `

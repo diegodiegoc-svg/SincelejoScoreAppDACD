@@ -15,9 +15,20 @@
             SINCELEJO<span>SCORE</span>
             <span style="font-size: 13px; color: #888; font-weight: normal; margin-left: 10px;">| PANEL DE ADMINISTRACIÓN</span>
         </div>
-        <a href="index.html" class="admin-nav-public-btn">
-            🌐 Ir a Marcadores Públicos
-        </a>
+        <div class="admin-header-actions">
+            <!-- Contenedor Visual para Usuario Activo -->
+            <div id="panel-user-info" class="panel-user-info">
+                <span class="user-icon">👤</span>
+                <span id="nombre-usuario-sesion" class="nombre-usuario-sesion">Usuario</span>
+                <span id="rol-usuario-sesion" class="rol-usuario-sesion">ADMIN</span>
+                <button type="button" id="btn-logout" class="btn-logout" title="Cerrar Sesión">
+                    🚪 Cerrar Sesión
+                </button>
+            </div>
+            <a href="index.html" class="admin-nav-public-btn">
+                🌐 Ir a Marcadores Públicos
+            </a>
+        </div>
     </header>
 
     <!-- Barra de Navegación por Pestañas -->

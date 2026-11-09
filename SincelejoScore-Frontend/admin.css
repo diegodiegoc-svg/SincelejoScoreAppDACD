@@ -865,5 +865,92 @@ select.form-control option {
     letter-spacing: 0.5px;
 }
 
+/* ==========================================================================
+   USUARIO EN SESIÓN Y CONTROL DE ACCESO (HEADER)
+   ========================================================================== */
+.admin-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+#panel-user-info,
+.panel-user-info {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #141418;
+    border: 1px solid #2a2a34;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+}
+
+.user-icon {
+    font-size: 14px;
+    opacity: 0.85;
+}
+
+#nombre-usuario-sesion,
+.nombre-usuario-sesion {
+    font-weight: 700;
+    color: #ffffff;
+    max-width: 170px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#rol-usuario-sesion,
+.rol-usuario-sesion {
+    font-size: 11px;
+    font-weight: 800;
+    padding: 2px 7px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    background: rgba(0, 210, 255, 0.15);
+    color: #00d2ff;
+    border: 1px solid #00d2ff;
+}
+
+.rol-superadmin {
+    background: rgba(255, 0, 68, 0.15) !important;
+    color: #ff0044 !important;
+    border-color: #ff0044 !important;
+}
+
+.rol-planillero {
+    background: rgba(245, 158, 11, 0.15) !important;
+    color: #f59e0b !important;
+    border-color: #f59e0b !important;
+}
+
+#btn-logout,
+.btn-logout {
+    background: transparent;
+    color: #f43f5e;
+    border: 1px solid #e11d48;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-left: 2px;
+}
+
+#btn-logout:hover,
+.btn-logout:hover {
+    background-color: #e11d48;
+    color: #ffffff;
+    box-shadow: 0 0 10px rgba(225, 29, 72, 0.4);
+}
+
+
 
 
