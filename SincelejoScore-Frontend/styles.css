@@ -1,0 +1,1390 @@
+body {
+    background-color: #121214;
+    color: #e1e1e6;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.header {
+    background-color: #1a1a1e;
+    padding: 12px 20px;
+    border-bottom: 2px solid #ff0044;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.btn-admin-link {
+    background-color: #26262c;
+    color: #e1e1e6;
+    border: 1px solid #3a3a42;
+    padding: 7px 14px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.btn-admin-link:hover {
+    background-color: #ff0044;
+    color: #fff;
+    border-color: #ff0044;
+}
+
+.logo {
+    font-size: 20px;
+    font-weight: 800;
+    color: #ffffff;
+}
+
+.logo span {
+    color: #ff0044;
+}
+
+.sports-bar {
+    display: flex;
+    gap: 8px;
+    background-color: #18181c;
+    padding: 10px 20px;
+    overflow-x: auto;
+    border-bottom: 1px solid #2a2a30;
+}
+
+.sport-btn {
+    background-color: #26262c;
+    color: #a8a8b3;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 13px;
+    transition: all 0.2s;
+}
+
+.sport-btn.active, .sport-btn:hover {
+    background-color: #ff0044;
+    color: #ffffff;
+}
+
+.container {
+    padding: 20px;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.section-title {
+    font-size: 14px;
+    color: #8d8d99;
+    letter-spacing: 1px;
+    margin-bottom: 15px;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.btn-volver {
+    background-color: #202024;
+    color: #ff0044;
+    border: 1px solid #ff0044;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.header-torneo-detalle {
+    background-color: #202024;
+    padding: 16px;
+    border-radius: 8px 8px 0 0;
+    border-left: 5px solid #ff0044;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* Sub-navegación dentro del torneo */
+.sub-nav-torneo {
+    display: flex;
+    background-color: #18181c;
+    border-bottom: 1px solid #2a2a30;
+    margin-bottom: 15px;
+}
+
+.sub-tab-btn {
+    background: none;
+    border: none;
+    color: #8d8d99;
+    padding: 12px 20px;
+    font-weight: 600;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+}
+
+.sub-tab-btn.active {
+    color: #ffffff;
+    border-bottom: 2px solid #ff0044;
+}
+
+/* Tarjetas y Tablas */
+.torneo-header-clickable {
+    background-color: #202024;
+    padding: 12px 16px;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #2a2a30;
+}
+
+.torneo-header-clickable:hover {
+    border-color: #ff0044;
+}
+
+.match-card {
+    background-color: #202024;
+    padding: 12px 16px;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #2a2a30;
+}
+
+.match-info {
+    flex-grow: 1;
+}
+
+.team {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin: 4px 0;
+    font-size: 14px;
+}
+
+.score {
+    font-weight: bold;
+    color: #ff0044;
+    font-size: 15px;
+    margin-left: 12px;
+}
+
+.status {
+    font-size: 11px;
+    padding: 3px 6px;
+    background-color: #121214;
+    color: #00e676;
+    border-radius: 4px;
+}
+
+.tabla-score {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #202024;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.tabla-score th, .tabla-score td {
+    padding: 10px 12px;
+    text-align: center;
+    border-bottom: 1px solid #2a2a30;
+    font-size: 13px;
+}
+
+.tabla-score th {
+    background-color: #18181c;
+    color: #8d8d99;
+}
+/* Estilos del Modal de Plantilla */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.75);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.modal.hidden {
+    display: none;
+}
+
+.modal-content {
+    background: #18191c;
+    border: 1px solid #333;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    overflow: hidden;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 18px;
+    border-bottom: 1px solid #2a2a2e;
+}
+
+.btn-cerrar {
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 26px;
+    cursor: pointer;
+    min-width: 44px;
+    min-height: 44px;
+    width: 44px;
+    height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background 0.2s, color 0.2s;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    padding: 0;
+}
+
+.btn-cerrar:hover,
+.btn-cerrar:active {
+    color: #ff0044;
+    background: rgba(255, 0, 68, 0.15);
+}
+
+.modal-body {
+    padding: 15px;
+    max-height: 80vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+}
+
+/* Efecto hover interactivo para los nombres de equipos */
+.equipo-link {
+    cursor: pointer;
+    text-decoration: underline dotted #666;
+    transition: color 0.2s;
+}
+
+.equipo-link:hover {
+    color: #ff0044 !important;
+}
+/* --- ESTILOS DETALLE DE PARTIDO TIPO FLASHSCORE --- */
+.modal-partido-content {
+    max-width: 650px;
+    width: 95%;
+}
+
+.scoreboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #111214;
+    padding: 18px 14px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #222;
+}
+
+.team-side {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.team-crest {
+    font-size: 26px;
+    margin-bottom: 6px;
+}
+
+.team-title {
+    font-weight: 600;
+    font-size: 14px;
+    color: #f1f1f1;
+}
+
+.score-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 130px;
+}
+
+.big-score {
+    font-size: 32px;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: 2px;
+}
+
+.match-badge {
+    margin-top: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 4px;
+    background: #2a2a2e;
+    color: #4cd137;
+    text-transform: uppercase;
+}
+
+/* Sub-pestañas del Partido */
+.match-tabs {
+    display: flex;
+    gap: 8px;
+    border-bottom: 1px solid #2a2a2e;
+    margin-bottom: 15px;
+}
+
+.match-tab-btn {
+    background: transparent;
+    border: none;
+    color: #8d8d99;
+    padding: 8px 14px;
+    font-size: 13px;
+    cursor: pointer;
+    font-weight: 600;
+    border-bottom: 2px solid transparent;
+}
+
+.match-tab-btn.active {
+    color: #fff;
+    border-bottom-color: #ff0044;
+}
+
+/* Timeline / Eventos */
+.timeline-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 5px 0;
+}
+
+.timeline-item {
+    display: flex;
+    align-items: center;
+    background: #1e1f23;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+}
+
+.timeline-minute {
+    font-weight: 700;
+    color: #ff0044;
+    width: 45px;
+}
+
+.timeline-desc {
+    flex: 1;
+    color: #ddd;
+}
+
+/* Alineaciones Grid */
+.lineups-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.lineup-col {
+    background: #111214;
+    padding: 12px;
+    border-radius: 6px;
+    border: 1px solid #222;
+}
+
+.lineup-ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.lineup-ul li {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    font-size: 12px;
+    border-bottom: 1px solid #1c1d22;
+    color: #ccc;
+}
+
+.lineup-ul li:last-child {
+    border-bottom: none;
+}
+
+.match-card {
+    cursor: pointer;
+    transition: transform 0.15s, background-color 0.15s;
+}
+
+.match-card:hover {
+    background-color: #232429;
+    transform: translateY(-2px);
+}
+/* --- FICHA TÉCNICA DE JUGADOR FLASHSCORE --- */
+.player-card-modal {
+    max-width: 420px;
+    text-align: center;
+}
+
+.player-card-body {
+    padding: 25px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.player-avatar-box {
+    position: relative;
+    width: 90px;
+    height: 90px;
+    margin-bottom: 12px;
+}
+
+.player-img, .player-avatar-fallback {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    background: #25262c;
+    border: 2px solid #ff0044;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 42px;
+}
+
+.player-dorsal-tag {
+    position: absolute;
+    bottom: -2px;
+    right: -2px;
+    background: #ff0044;
+    color: #fff;
+    font-weight: 800;
+    font-size: 13px;
+    padding: 2px 7px;
+    border-radius: 12px;
+    border: 2px solid #18191c;
+}
+
+.player-card-name {
+    margin: 5px 0 2px;
+    font-size: 18px;
+    color: #fff;
+}
+
+.player-card-team {
+    margin: 0 0 18px;
+    font-size: 13px;
+    color: #8d8d99;
+}
+
+.player-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    width: 100%;
+}
+
+.stat-box {
+    background: #111214;
+    padding: 10px 6px;
+    border-radius: 6px;
+    border: 1px solid #222;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.stat-label {
+    font-size: 11px;
+    color: #777;
+    text-transform: uppercase;
+}
+
+.stat-value {
+    font-size: 13px;
+    font-weight: 700;
+    color: #eee;
+}
+
+.jugador-click {
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.jugador-click:hover {
+    color: #ff0044 !important;
+}
+/* --- BARRA DE FILTRO POR ESTADO DE PARTIDO --- */
+.match-status-filter-bar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #222;
+    padding-bottom: 10px;
+}
+
+.filter-status-btn {
+    background: #18191c;
+    border: 1px solid #2e2f34;
+    color: #a0a0a8;
+    padding: 6px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+}
+
+.filter-status-btn:hover {
+    background: #25262c;
+    color: #fff;
+    border-color: #444;
+}
+
+.filter-status-btn.active {
+    background: #ff0044;
+    color: #fff;
+    border-color: #ff0044;
+}
+
+/* Punto titilante de En Vivo */
+.live-dot {
+    width: 7px;
+    height: 7px;
+    background-color: #ff3838;
+    border-radius: 50%;
+    display: inline-block;
+    animation: blink 1.2s infinite ease-in-out;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.3; transform: scale(0.85); }
+}
+/* --- BARRA DE BÚSQUEDA RÁPIDA EN CABECERA --- */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.search-box-header {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.search-box-header input {
+    background: #1e1f23;
+    border: 1px solid #333;
+    color: #fff;
+    padding: 7px 32px 7px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    outline: none;
+    width: 220px;
+    transition: all 0.25s ease;
+}
+
+.search-box-header input:focus {
+    border-color: #ff0044;
+    width: 280px;
+    background: #141518;
+}
+
+.search-box-header .btn-clear {
+    position: absolute;
+    right: 10px;
+    background: transparent;
+    border: none;
+    color: #888;
+    font-size: 16px;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.search-box-header .btn-clear:hover {
+    color: #ff0044;
+}
+/* --- INDICADORES DE FORMA RECIENTE (RACHA W/D/L) --- */
+.form-container {
+    display: inline-flex;
+    gap: 4px;
+    align-items: center;
+    justify-content: center;
+}
+
+.form-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    font-size: 10px;
+    font-weight: 800;
+    color: #fff;
+    user-select: none;
+}
+
+.form-win {
+    background-color: #2ed573; /* Verde victoria */
+}
+
+.form-draw {
+    background-color: #ffa502; /* Amarillo empate */
+}
+
+.form-loss {
+    background-color: #ff4757; /* Rojo derrota */
+}
+
+.form-empty {
+    color: #666;
+    font-size: 14px;
+}
+/* --- EFECTO DE GOL / CAMBIO DE MARCADOR EN VIVO --- */
+@keyframes goalFlash {
+    0% {
+        background-color: rgba(46, 213, 115, 0.45);
+        border-color: #2ed573;
+    }
+    100% {
+        background-color: #18191c;
+        border-color: #222;
+    }
+}
+
+.match-card.goal-highlight {
+    animation: goalFlash 2.5s ease-out;
+}
+/* --- CARRUSEL DE FECHAS ESTILO FLASHSCORE (-7 / HOY / +7) --- */
+.date-carousel-wrapper {
+    background-color: #0c0d0e;
+    border-bottom: 1px solid #1f2024;
+    display: flex;
+    align-items: center;
+    padding: 4px 10px;
+    user-select: none;
+}
+
+.date-nav-btn {
+    background: transparent;
+    border: none;
+    color: #888;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 4px 10px;
+    line-height: 1;
+    transition: color 0.2s;
+}
+
+.date-nav-btn:hover {
+    color: #ff0044;
+}
+
+.date-carousel-container {
+    display: flex;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    gap: 6px;
+    flex: 1;
+    padding: 4px 0;
+    scrollbar-width: none; /* Firefox */
+}
+
+.date-carousel-container::-webkit-scrollbar {
+    display: none; /* Chrome, Edge, Safari */
+}
+
+.date-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 60px;
+    padding: 6px 4px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s;
+    border-bottom: 2px solid transparent;
+}
+
+.date-item:hover {
+    background-color: #1a1b1f;
+}
+
+.date-item .day-name {
+    font-size: 11px;
+    font-weight: 700;
+    color: #8d8d99;
+    text-transform: uppercase;
+}
+
+.date-item .day-num {
+    font-size: 12px;
+    color: #bbb;
+    margin-top: 2px;
+}
+
+/* Estado Activo / Seleccionado */
+.date-item.active {
+    background-color: #1a1b1f;
+    border-bottom: 2px solid #ff0044;
+}
+
+.date-item.active .day-name,
+.date-item.active .day-num {
+    color: #ff0044;
+    font-weight: 800;
+}
+
+/* Resalte especial de HOY cuando no está seleccionado */
+.date-item.is-today:not(.active) .day-name {
+    color: #ffffff;
+}
+
+/* ==========================================================================
+   TIMELINE FLASHSCORE (RESUMEN)
+   ========================================================================== */
+.flashscore-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 10px 0;
+}
+
+.timeline-period-header {
+    background: #18191e;
+    color: #e1e1e6;
+    text-align: center;
+    padding: 7px 12px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    border-radius: 4px;
+    border: 1px solid #2a2b32;
+    margin: 14px 0 6px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+}
+
+.timeline-period-header:first-child {
+    margin-top: 0;
+}
+
+.timeline-period-score {
+    color: #ff0044;
+    font-weight: 800;
+}
+
+.timeline-row {
+    display: grid;
+    grid-template-columns: 1fr 24px 1fr;
+    align-items: center;
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    min-height: 32px;
+}
+
+.timeline-row:hover {
+    background: #18191d;
+}
+
+.timeline-cell-local {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    text-align: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.timeline-center-divider {
+    text-align: center;
+    color: #444;
+    font-size: 11px;
+}
+
+.timeline-cell-visit {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    text-align: right;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.timeline-badge-min {
+    font-weight: 800;
+    font-size: 11px;
+    color: #ff0044;
+    min-width: 26px;
+}
+
+.timeline-event-icon {
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+}
+
+.timeline-player-name {
+    font-weight: 600;
+    color: #f1f1f5;
+}
+
+.timeline-player-name:hover {
+    color: #ff0044;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.timeline-comment {
+    color: #888;
+    font-size: 11px;
+}
+
+
+/* ==========================================================================
+   VISTA BASE Y ESCRITORIO - CUADRO / PLAYOFFS
+   ========================================================================== */
+.cuadro-wrapper {
+    background: #0f1015;
+    border: 1px solid #272835;
+    border-radius: 8px;
+    padding: 16px;
+    margin-top: 12px;
+    color: #ffffff;
+    box-sizing: border-box;
+}
+
+.cuadro-nav-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.cuadro-nav-arrow {
+    background: #1c1d26;
+    border: 1px solid #272835;
+    color: #ffffff;
+    border-radius: 6px;
+    width: 34px;
+    height: 34px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.2s ease;
+}
+
+.cuadro-nav-arrow:hover {
+    background: #272835;
+}
+
+.cuadro-ronda-tab {
+    background: #1c1d26;
+    border: 1px solid #272835;
+    color: #94a3b8;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.2s ease;
+}
+
+.cuadro-ronda-tab:hover {
+    color: #ffffff;
+    background: #272835;
+}
+
+.cuadro-ronda-tab.active {
+    background: #e11d48;
+    border-color: #e11d48;
+    color: #ffffff;
+}
+
+/* Contenedor del Árbol en Columnas Horizontales para PC */
+.cuadro-tree-container {
+    display: flex;
+    flex-direction: row;
+    gap: 24px;
+    overflow-x: auto;
+    padding-bottom: 16px;
+    align-items: stretch;
+}
+
+.cuadro-round-col {
+    min-width: 280px;
+    max-width: 320px;
+    flex: 1 0 auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.cuadro-round-header, .cuadro-fase-header, .cuadro-fase-titulo, .cuadro-round-col .cuadro-round-header {
+    border-left: 4px solid #e11d48 !important;
+    padding-left: 10px !important;
+    margin-bottom: 14px !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    font-weight: 700 !important;
+    font-size: 14px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    color: #ffffff !important;
+}
+
+.cuadro-fase-header h3 {
+    margin: 0 !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    color: #ffffff !important;
+}
+
+.cuadro-fase-header span {
+    font-size: 11px !important;
+    color: #8d8d99 !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+}
+
+.cuadro-llaves-grid, .cuadro-llaves-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    flex: 1;
+    justify-content: space-around;
+}
+
+.cuadro-match-card {
+    background: #14151c;
+    border: 1px solid #272835;
+    border-radius: 8px;
+    padding: 12px 14px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    position: relative;
+    transition: border-color 0.2s ease;
+}
+
+.cuadro-match-card:hover {
+    border-color: #3f4156;
+}
+
+.cuadro-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    color: #94a3b8;
+    font-weight: 600;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding-bottom: 6px;
+}
+
+.cuadro-team-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    font-weight: 500;
+    color: #e2e8f0;
+    padding: 3px 0;
+}
+
+.cuadro-team-row.winner {
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.cuadro-score-badge {
+    font-weight: 700;
+    font-size: 14px;
+    color: #ffffff;
+    min-width: 20px;
+    text-align: right;
+}
+
+.cuadro-aggregate-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    color: #94a3b8;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    padding-top: 6px;
+    margin-top: 2px;
+}
+
+.cuadro-aggregate-footer .global-pill {
+    font-weight: 700;
+    color: #38bdf8;
+}
+
+
+.cuadro-vista-banner, [class*="vista-de-ronda"] {
+    display: none !important;
+}
+
+.cuadro-penales-badge, .badge-penales {
+    background: #831843 !important;
+    color: #f472b6 !important;
+    font-size: 10px !important;
+    padding: 2px 6px !important;
+    border-radius: 4px !important;
+    font-weight: 600 !important;
+    margin-left: 6px !important;
+}
+.cuadro-penales-score {
+    color: #94a3b8 !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    margin-left: 4px !important;
+}
+
+
+/* ==========================================================================
+   USABILIDAD MÓVIL (PANTALLAS < 768px)
+   ========================================================================== */
+@media (max-width: 768px) {
+    html, body {
+        width: 100% !important;
+        max-width: 100vw !important;
+        overflow-x: hidden !important;
+    }
+    .container {
+        padding: 8px 10px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+    .header {
+        padding: 10px 12px !important;
+        gap: 8px !important;
+    }
+    .logo {
+        font-size: 18px !important;
+    }
+    .search-box-header {
+        width: 100% !important;
+        margin-top: 4px !important;
+    }
+    .search-box-header input {
+        width: 100% !important;
+        box-sizing: border-box !important;
+        font-size: 13px !important;
+        padding: 6px 30px 6px 12px !important;
+    }
+    .search-box-header input:focus {
+        width: 100% !important;
+    }
+    .sub-tab-btn {
+        padding: 10px 14px !important;
+        font-size: 13px !important;
+    }
+    .scoreboard-header {
+        padding: 14px 8px !important;
+    }
+    .score-center {
+        min-width: 90px !important;
+        padding: 0 4px !important;
+    }
+    .big-score {
+        font-size: 24px !important;
+    }
+    .team-title {
+        font-size: 12px !important;
+    }
+    .team-crest {
+        font-size: 20px !important;
+    }
+    .tabla-score th, .tabla-score td {
+        padding: 8px 6px !important;
+        font-size: 12px !important;
+    }
+    .header-torneo-detalle {
+        padding: 12px 14px !important;
+        font-size: 15px !important;
+    }
+    .btn-volver {
+        padding: 6px 12px !important;
+        font-size: 13px !important;
+        margin-bottom: 10px !important;
+    }
+    .section-title {
+        font-size: 13px !important;
+        margin-bottom: 10px !important;
+        padding-left: 2px !important;
+    }
+    .sports-bar, .sub-nav-torneo, .match-status-filter-bar {
+        display: flex !important;
+        overflow-x: auto !important;
+        white-space: nowrap !important;
+        -webkit-overflow-scrolling: touch !important;
+        gap: 4px !important;
+        padding-bottom: 4px !important;
+        scrollbar-width: none !important;
+    }
+    .modal-content, .modal-partido-content, .player-card-modal {
+        width: 95% !important;
+        max-width: 95% !important;
+        margin: 10px auto !important;
+        box-sizing: border-box !important;
+    }
+    .modal-body {
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+    }
+
+    /* Estilos de botones de navegación del Árbol/Cuadro en móvil */
+    .bracket-rounds-nav button,
+    .cuadro-nav button,
+    .bracket-controls button,
+    button.btn-ronda-cuadro {
+        background: #181920 !important;
+        color: #ffffff !important;
+        border: 1px solid #333642 !important;
+        border-radius: 4px !important;
+        padding: 6px 10px !important;
+        font-size: 11px !important;
+        font-weight: 700 !important;
+    }
+
+    /* Botón activo seleccionado */
+    .bracket-rounds-nav button.active,
+    .cuadro-nav button.active,
+    button.btn-ronda-cuadro.active {
+        background: #e11d48 !important;
+        border-color: #e11d48 !important;
+        color: #ffffff !important;
+    }
+
+    /* 1. Margen derecho seguro para que las tarjetas de partidos no rocen la orilla de la pantalla */
+    .match-card {
+        padding-right: 12px !important;
+        box-sizing: border-box !important;
+    }
+
+    /* 2. Estilo oscuro y borde para los botones de navegación del Árbol/Cuadro */
+    #vista-cuadro button,
+    #bracket-container button,
+    div[style*="ÁRBOL COMPLETO"] button,
+    .cuadro-container button {
+        background: #181920 !important;
+        color: #ffffff !important;
+        border: 1px solid #333642 !important;
+        border-radius: 4px !important;
+        padding: 6px 10px !important;
+        font-size: 11px !important;
+        font-weight: 700 !important;
+    }
+
+    /* 1. Barra contenedora de navegación del Árbol */
+    .cuadro-nav-bar {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 6px !important;
+        width: 100% !important;
+        margin: 8px 0 14px 0 !important;
+        box-sizing: border-box !important;
+    }
+
+    /* 2. Flechas < y > */
+    .cuadro-nav-arrow {
+        background: #181920 !important;
+        color: #ffffff !important;
+        border: 1px solid #333642 !important;
+        border-radius: 6px !important;
+        width: 32px !important;
+        height: 32px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        font-size: 14px !important;
+        font-weight: 800 !important;
+        flex-shrink: 0 !important;
+        cursor: pointer !important;
+    }
+    .cuadro-nav-arrow:disabled {
+        opacity: 0.3 !important;
+    }
+
+    /* 3. Contenedor de las pestañas (ÁRBOL COMPLETO, SEMIFINALES, FINAL) */
+    .cuadro-rondas-pills {
+        display: flex !important;
+        gap: 6px !important;
+        overflow-x: auto !important;
+        white-space: nowrap !important;
+        -webkit-overflow-scrolling: touch !important;
+        scrollbar-width: none !important;
+    }
+    .cuadro-rondas-pills::-webkit-scrollbar {
+        display: none !important;
+    }
+
+    /* 4. Botones de fase inactivos */
+    .cuadro-ronda-tab {
+        background: #181920 !important;
+        color: #a1a1aa !important;
+        border: 1px solid #333642 !important;
+        border-radius: 6px !important;
+        padding: 6px 12px !important;
+        font-size: 11px !important;
+        font-weight: 700 !important;
+        white-space: nowrap !important;
+        cursor: pointer !important;
+    }
+
+    /* 5. Botón de fase ACTIVO */
+    .cuadro-ronda-tab.active {
+        background: #e11d48 !important;
+        color: #ffffff !important;
+        border-color: #e11d48 !important;
+    }
+
+    /* Restaurar tarjetas de enfrentamientos del Cuadro / Playoffs */
+    .cuadro-match-card {
+        background: #14151c !important;
+        border: 1px solid #272835 !important;
+        border-radius: 8px !important;
+        padding: 10px 12px !important;
+        margin-bottom: 10px !important;
+        box-sizing: border-box !important;
+        display: block !important;
+    }
+
+    .cuadro-match-header {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        font-size: 11px !important;
+        font-weight: 800 !important;
+        color: #94a3b8 !important;
+        margin-bottom: 8px !important;
+        padding-bottom: 4px !important;
+        border-bottom: 1px solid #1f202c !important;
+    }
+
+    .cuadro-team-row {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        padding: 5px 0 !important;
+        font-size: 13px !important;
+        color: #ffffff !important;
+    }
+
+    .cuadro-team-row.winner {
+        font-weight: 800 !important;
+        color: #ffffff !important;
+    }
+
+    .cuadro-team-name {
+        display: flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+        flex: 1 !important;
+    }
+
+    .cuadro-team-score {
+        font-size: 14px !important;
+        font-weight: 800 !important;
+        color: #10b981 !important;
+        min-width: 24px !important;
+        text-align: right !important;
+    }
+
+    /* 1. Contenedor principal del Cuadro con marco de tarjeta oscura */
+    .cuadro-wrapper {
+        background: #0f1015 !important;
+        border: 1px solid #1f2029 !important;
+        border-radius: 10px !important;
+        padding: 12px 10px !important;
+        margin: 10px 4px !important;
+        box-sizing: border-box !important;
+    }
+
+    /* 2. Cabecera con barrita vertical roja y alineación lateral idéntica a la vista original */
+    .cuadro-round-header,
+    .cuadro-fase-header {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        border-left: 4px solid #e11d48 !important;
+        padding: 2px 0 2px 8px !important;
+        margin: 12px 0 10px 0 !important;
+        box-sizing: border-box !important;
+    }
+
+    .cuadro-round-header span:first-child,
+    .cuadro-fase-header h3 {
+        font-size: 13px !important;
+        font-weight: 800 !important;
+        color: #ffffff !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.5px !important;
+        margin: 0 !important;
+    }
+
+    .cuadro-round-header span:last-child,
+    .cuadro-fase-header span {
+        font-size: 10px !important;
+        color: #8d8d99 !important;
+        font-weight: 700 !important;
+        text-transform: uppercase !important;
+    }
+
+    /* 3. Ocultar el tag suelto 'Vista de Ronda' en móvil para mantener la cabecera limpia */
+    .cuadro-fase-header > div:last-child {
+        display: none !important;
+    }
+}

@@ -1,0 +1,25 @@
+## Build and output folders
+bin/
+obj/
+out/
+
+## Visual Studio & VS Code
+.vs/
+.vscode/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## Rider & JetBrains
+.idea/
+*.sln.iml
+
+## OS generated files
+.DS_Store
+Thumbs.db
+
+## Crash and diagnostic files
+*.crash
+*.dump
+dump_*.sql

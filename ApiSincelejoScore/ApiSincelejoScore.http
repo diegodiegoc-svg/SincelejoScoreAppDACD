@@ -1,0 +1,6 @@
+@ApiSincelejoScore_HostAddress = http://localhost:5291
+
+GET {{ApiSincelejoScore_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SincelejoScore - Marcadores en Vivo</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="header">
+        <div class="logo">SINCELEJO<span>SCORE</span></div>
+        <div class="search-box-header">
+            <input type="text" id="input-busqueda" placeholder="Buscar torneo o equipo..." autocomplete="off">
+            <button id="btn-limpiar-busqueda" class="btn-clear hidden">&times;</button>
+        </div>
+    </header>
+
+    <!-- Barra de Deportes Superior -->
+    <nav class="sports-bar" id="sports-bar"></nav>
+
+    <!-- Carrusel de Fechas Estilo Flashscore (-7 días | HOY | +7 días) -->
+    <div class="date-carousel-wrapper">
+        <button id="btn-carousel-prev" class="date-nav-btn" title="Días anteriores">&#8249;</button>
+        <div class="date-carousel-container" id="date-carousel-container"></div>
+        <button id="btn-carousel-next" class="date-nav-btn" title="Días posteriores">&#8250;</button>
+    </div>
+
+    <main class="container">
+        
+        <!-- VISTA 1: Lista de Torneos con Partidos Activos en la Fecha -->
+        <section id="vista-lista-torneos" class="vista">
+            <h2 class="section-title" id="titulo-seccion-torneos">TORNEOS CON PARTIDOS HOY</h2>
+            <div id="torneos-container">
+                <p class="loading">Cargando campeonatos...</p>
+            </div>
+        </section>
+
+        <!-- VISTA 2: Detalle del Torneo (Sub-páginas con pestañas tipo Flashscore) -->
+        <section id="vista-detalle-torneo" class="vista hidden">
+            <button class="btn-volver" id="btn-volver">← Volver a Torneos</button>
+            
+            <div class="header-torneo-detalle" id="header-torneo-detalle"></div>
+
+            <!-- Navegación interna del torneo -->
+            <div class="sub-nav-torneo">
+                <button class="sub-tab-btn active" id="tab-partidos">Partidos</button>
+                <button class="sub-tab-btn" id="tab-clasificacion">Clasificación</button>
+                <button class="sub-tab-btn hidden" id="tab-goleadores">Goleadores</button>
+                <button class="sub-tab-btn" id="tab-fixture">Fixture Completo</button>
+                <button class="sub-tab-btn hidden" id="tab-cuadro">Cuadro</button>
+            </div>
+
+            <!-- Sub-vista 1: Partidos con Barra de Filtros de Estado -->
+            <div id="subvista-partidos" class="sub-vista-content">
+                <div class="match-status-filter-bar">
+                    <button class="filter-status-btn active" data-filter="TODOS">Todos</button>
+                    <button class="filter-status-btn" data-filter="EN_VIVO">
+                        <span class="live-dot"></span> En Vivo
+                    </button>
+                    <button class="filter-status-btn" data-filter="FINALIZADO">Finalizados</button>
+                    <button class="filter-status-btn" data-filter="PROGRAMADO">Próximos</button>
+                </div>
+                <div id="lista-partidos-container"></div>
+            </div>
+
+            <!-- Sub-vista 2: Clasificación (Tabla de posiciones con Racha de Forma) -->
+            <div id="subvista-clasificacion" class="sub-vista-content hidden">
+                <div style="overflow-x: auto;">
+                    <table class="tabla-score">
+                        <thead id="tabla-clasificacion-head">
+                            <tr>
+                                <th style="width: 32px;">#</th>
+                                <th style="text-align: left;">Equipo</th>
+                                <th>PJ</th>
+                                <th>PG</th>
+                                <th>PE</th>
+                                <th>PP</th>
+                                <th>GF</th>
+                                <th>GC</th>
+                                <th>+/-</th>
+                                <th>PTS</th>
+                                <th>Forma</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-clasificacion-body"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Sub-vista 3: Goleadores (Fútbol / Microfútbol) -->
+            <div id="subvista-goleadores" class="sub-vista-content hidden">
+                <div style="overflow-x: auto;">
+                    <table class="tabla-score">
+                        <thead id="tabla-goleadores-head">
+                            <tr>
+                                <th style="width: 36px;">#</th>
+                                <th style="text-align: left;">Jugador</th>
+                                <th style="text-align: left;">Equipo</th>
+                                <th>Goles</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-goleadores-body"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Sub-vista 4: Fixture Completo (Todas las jornadas) -->
+            <div id="subvista-fixture" class="sub-vista-content hidden">
+                <div id="fixture-container"></div>
+            </div>
+
+            <!-- Sub-vista 5: Cuadro / Playoffs (Eliminación Directa Estilo Flashscore) -->
+            <div id="subvista-cuadro" class="sub-vista-content hidden">
+                <div id="cuadro-container"></div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- MODAL 1: Plantilla de Jugadores de un Equipo -->
+    <div id="modal-equipo" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-equipo-nombre" style="margin: 0; color: #ff0044;">Plantilla del Equipo</h3>
+                <button id="btn-cerrar-modal" class="btn-cerrar">&times;</button>
+            </div>
+            <div class="modal-body">
+                <table class="tabla-score">
+                    <thead>
+                        <tr>
+                            <th style="width: 50px;">#</th>
+                            <th style="text-align: left;">Nombre del Jugador</th>
+                            <th style="text-align: left;">Posición</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-jugadores-body"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 2: Detalle de Partido Tipo Flashscore -->
+    <div id="modal-partido" class="modal hidden">
+        <div class="modal-content modal-partido-content">
+            <div class="modal-header">
+                <span id="modal-partido-titulo" style="font-size: 13px; color: #aaa; text-transform: uppercase;">Detalle del Encuentro</span>
+                <button id="btn-cerrar-modal-partido" class="btn-cerrar">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="scoreboard-header">
+                    <div class="team-side" id="match-team-local">
+                        <div class="team-crest">🏠</div>
+                        <span class="team-title" id="match-name-local">Local</span>
+                        <div id="match-form-local" style="margin-top: 6px;"></div>
+                    </div>
+                    <div class="score-center">
+                        <div class="big-score" id="match-score-display">0 - 0</div>
+                        <span class="match-badge" id="match-status-badge">PROGRAMADO</span>
+                    </div>
+                    <div class="team-side" id="match-team-visit">
+                        <div class="team-crest">✈️</div>
+                        <span class="team-title" id="match-name-visit">Visitante</span>
+                        <div id="match-form-visit" style="margin-top: 6px;"></div>
+                    </div>
+                </div>
+
+                <div class="match-tabs">
+                    <button class="match-tab-btn active" id="btn-tab-eventos">RESUMEN</button>
+                    <button class="match-tab-btn" id="btn-tab-alineaciones">ALINEACIONES</button>
+                </div>
+
+                <div id="match-content-eventos" class="match-tab-pane">
+                    <div id="match-events-list" class="timeline-container"></div>
+                </div>
+
+                <div id="match-content-alineaciones" class="match-tab-pane hidden">
+                    <div class="lineups-grid">
+                        <div class="lineup-col">
+                            <h4 id="lineup-title-local" style="margin: 5px 0 10px; color: #ff0044; font-size: 13px;">Local</h4>
+                            <ul id="lineup-list-local" class="lineup-ul"></ul>
+                        </div>
+                        <div class="lineup-col">
+                            <h4 id="lineup-title-visit" style="margin: 5px 0 10px; color: #00d2ff; font-size: 13px;">Visitante</h4>
+                            <ul id="lineup-list-visit" class="lineup-ul"></ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 3: Ficha Técnica del Jugador Tipo Flashscore -->
+    <div id="modal-jugador-ficha" class="modal hidden" style="z-index: 10005;">
+        <div class="modal-content player-card-modal">
+            <div class="modal-header">
+                <span style="font-size: 12px; color: #aaa; text-transform: uppercase;">Ficha del Jugador</span>
+                <button id="btn-cerrar-modal-jugador" class="btn-cerrar">&times;</button>
+            </div>
+            <div class="modal-body player-card-body">
+                <div class="player-avatar-box">
+                    <img id="player-card-img" src="" alt="Foto" class="player-img hidden">
+                    <div id="player-card-avatar" class="player-avatar-fallback">👤</div>
+                    <span id="player-card-dorsal" class="player-dorsal-tag">#</span>
+                </div>
+                <h3 id="player-card-nombre" class="player-card-name">Nombre Jugador</h3>
+                <p id="player-card-equipo" class="player-card-team">Equipo</p>
+                
+                <div class="player-stats-grid">
+                    <div class="stat-box">
+                        <span class="stat-label">Posición</span>
+                        <span class="stat-value" id="player-card-posicion">-</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-label">Edad</span>
+                        <span class="stat-value" id="player-card-edad">-</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-label">Estatura</span>
+                        <span class="stat-value" id="player-card-estatura">-</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js?v=3.0"></script>
+</body>
+</html>

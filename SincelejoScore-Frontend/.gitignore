@@ -1,0 +1,6 @@
+*BACKUP*
+bin/
+obj/
+.vs/
+.vscode/
+*.user

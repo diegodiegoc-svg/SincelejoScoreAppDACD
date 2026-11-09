@@ -1,0 +1,799 @@
+/* ==========================================================================
+   ESTILOS PANEL DE ADMINISTRACIÓN - SINCELEJOSCORE
+   ========================================================================== */
+
+.admin-header {
+    background-color: #1a1a1e;
+    padding: 14px 24px;
+    border-bottom: 2px solid #ff0044;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.admin-nav-public-btn {
+    background-color: #26262c;
+    color: #e1e1e6;
+    border: 1px solid #3a3a42;
+    padding: 8px 16px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s;
+}
+
+.admin-nav-public-btn:hover {
+    background-color: #ff0044;
+    color: #fff;
+    border-color: #ff0044;
+}
+
+.admin-tabs-nav {
+    display: flex;
+    background-color: #16161a;
+    padding: 0 24px;
+    border-bottom: 1px solid #2a2a30;
+    gap: 10px;
+    overflow-x: auto;
+}
+
+.admin-tab-btn {
+    background: transparent;
+    border: none;
+    color: #8d8d99;
+    padding: 14px 18px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+}
+
+.admin-tab-btn:hover {
+    color: #e1e1e6;
+}
+
+.admin-tab-btn.active {
+    color: #ff0044;
+    border-bottom-color: #ff0044;
+}
+
+.admin-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px;
+}
+
+.admin-card {
+    background-color: #1c1c20;
+    border: 1px solid #2a2a32;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.admin-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    border-bottom: 1px solid #2a2a32;
+    padding-bottom: 12px;
+}
+
+.admin-card-title {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 800;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* FORMULARIOS Y CAMPOS */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.form-group label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #a8a8b3;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.form-control {
+    background-color: #121214;
+    border: 1px solid #323238;
+    color: #e1e1e6;
+    padding: 10px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.form-control:focus {
+    border-color: #ff0044;
+}
+
+select.form-control {
+    cursor: pointer;
+    pointer-events: auto;
+}
+
+select.form-control option {
+    background-color: #121214;
+    color: #e1e1e6;
+}
+
+.form-checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: #e1e1e6;
+    cursor: pointer;
+    margin-top: 24px;
+}
+
+.form-checkbox-label input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #ff0044;
+    cursor: pointer;
+}
+
+/* BOTONES */
+.btn-primary {
+    background-color: #ff0044;
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-primary:hover {
+    background-color: #cc0037;
+}
+
+.btn-secondary {
+    background-color: #29292e;
+    color: #e1e1e6;
+    border: 1px solid #3c3c44;
+    padding: 10px 18px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-secondary:hover {
+    background-color: #383840;
+}
+
+.btn-success {
+    background-color: #059669;
+    color: #fff;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-success:hover {
+    background-color: #047857;
+}
+
+.btn-sm {
+    padding: 4px 8px;
+    font-size: 11px;
+    border-radius: 4px;
+}
+
+.btn-info {
+    background-color: #0284c7;
+    color: #ffffff;
+    border: 1px solid #0369a1;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.btn-info:hover {
+    background-color: #0369a1;
+    color: #ffffff;
+}
+
+.btn-editar-partido {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.btn-danger-outline {
+    background: transparent;
+    color: #f43f5e;
+    border: 1px solid #f43f5e;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-danger-outline:hover {
+    background-color: #f43f5e;
+    color: #fff;
+}
+
+.btn-edit-outline {
+    background: transparent;
+    color: #38bdf8;
+    border: 1px solid #38bdf8;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-edit-outline:hover {
+    background-color: #38bdf8;
+    color: #fff;
+}
+
+.btn-manage-outline {
+    background: transparent;
+    color: #a855f7;
+    border: 1px solid #a855f7;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-manage-outline:hover {
+    background-color: #a855f7;
+    color: #fff;
+}
+
+/* TABLAS DE GESTIÓN */
+.admin-table-wrapper {
+    overflow-x: auto;
+    border-radius: 6px;
+    border: 1px solid #282830;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    text-align: left;
+}
+
+.admin-table th {
+    background-color: #18181c;
+    color: #a8a8b3;
+    padding: 12px 14px;
+    font-weight: 700;
+    border-bottom: 2px solid #2c2c34;
+    white-space: nowrap;
+}
+
+.admin-table td {
+    padding: 12px 14px;
+    border-bottom: 1px solid #24242c;
+    color: #e1e1e6;
+    vertical-align: middle;
+}
+
+.admin-table tr:hover {
+    background-color: #222228;
+}
+
+/* BADGES */
+.badge-sede {
+    background: #2a2a34;
+    color: #38bdf8;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.badge-multi {
+    background: #3b2044;
+    color: #e879f9;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.badge-mono {
+    background: #1e293b;
+    color: #94a3b8;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+/* MESA TÉCNICA EN VIVO */
+.mesa-board {
+    background: linear-gradient(180deg, #1f1f26 0%, #17171c 100%);
+    border: 2px solid #2d2d38;
+    border-radius: 12px;
+    padding: 24px;
+    text-align: center;
+    margin-bottom: 24px;
+    position: relative;
+}
+
+.mesa-match-meta {
+    font-size: 13px;
+    font-weight: 600;
+    color: #8d8d99;
+    margin-bottom: 18px;
+}
+
+.mesa-teams-grid {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 20px;
+}
+
+.mesa-team-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.mesa-team-name {
+    font-size: 20px;
+    font-weight: 800;
+    color: #fff;
+}
+
+.mesa-big-score {
+    font-size: 56px;
+    font-weight: 900;
+    color: #ff0044;
+    font-family: monospace;
+    min-width: 70px;
+}
+
+.mesa-score-btns {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-score-adjust {
+    background: #2a2a34;
+    color: #fff;
+    border: 1px solid #3e3e4a;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-score-adjust:hover {
+    background: #ff0044;
+    border-color: #ff0044;
+}
+
+.mesa-center-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.mesa-status-pill {
+    background: #e11d48;
+    color: #fff;
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+.mesa-actions-bar {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+    padding-top: 18px;
+    border-top: 1px solid #2a2a34;
+}
+
+/* NOTIFICACIONES TOAST */
+.toast-msg {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background-color: #10b981;
+    color: #fff;
+    padding: 12px 20px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 13px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+    z-index: 999999;
+    animation: fadeIn 0.3s;
+}
+
+.toast-msg.error {
+    background-color: #ef4444;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ==========================================================================
+   TARJETAS Y MESA TÉCNICA VISUAL
+   ========================================================================== */
+.mesa-torneo-group {
+    background-color: #1a1a20;
+    border-radius: 8px;
+    border: 1px solid #2a2a34;
+    padding: 16px;
+    margin-bottom: 20px;
+}
+
+.mesa-torneo-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #2a2a34;
+    padding-bottom: 10px;
+    margin-bottom: 14px;
+}
+
+.mesa-torneo-title {
+    font-size: 15px;
+    font-weight: 800;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.mesa-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 14px;
+}
+
+.mesa-match-card {
+    background-color: #141418;
+    border: 1px solid #282832;
+    border-radius: 8px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: all 0.2s ease;
+}
+
+.mesa-match-card:hover {
+    border-color: #ff0044;
+    box-shadow: 0 4px 15px rgba(255, 0, 68, 0.15);
+    transform: translateY(-2px);
+}
+
+.mesa-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    font-size: 12px;
+}
+
+.mesa-card-cancha {
+    color: #aaa;
+    font-weight: 600;
+}
+
+.mesa-card-teams {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 16px;
+    background: #191920;
+    padding: 12px;
+    border-radius: 6px;
+}
+
+.mesa-card-team-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+}
+
+.mesa-card-team-name {
+    font-weight: 700;
+    color: #f0f0f5;
+}
+
+.mesa-card-team-score {
+    font-size: 18px;
+    font-weight: 800;
+    color: #ff0044;
+}
+
+.mesa-card-btn-abrir {
+    width: 100%;
+    padding: 11px;
+    background-color: #26262e;
+    color: #fff;
+    border: 1px solid #3a3a44;
+    border-radius: 6px;
+    font-weight: 800;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.mesa-card-btn-abrir:hover {
+    background-color: #ff0044;
+    border-color: #ff0044;
+    box-shadow: 0 0 10px rgba(255, 0, 68, 0.4);
+}
+
+.mesa-active-banner {
+    background-color: #1a1a22;
+    border: 1px solid #333342;
+    border-radius: 8px;
+    padding: 12px 18px;
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+/* ==========================================================================
+   BADGES DE ESTADOS OPERATIVOS Y MODELO HÍBRIDO
+   ========================================================================== */
+.badge-status {
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    display: inline-block;
+    letter-spacing: 0.3px;
+}
+.badge-vivo {
+    background: rgba(225, 29, 72, 0.2);
+    border: 1px solid #e11d48;
+    color: #ff0044;
+}
+.badge-finalizado {
+    background: rgba(46, 213, 115, 0.2);
+    border: 1px solid #2ed573;
+    color: #2ed573;
+}
+.badge-programado {
+    background: rgba(99, 102, 241, 0.2);
+    border: 1px solid #6366f1;
+    color: #818cf8;
+}
+.badge-retrasado {
+    background: rgba(245, 158, 11, 0.2);
+    border: 1px solid #f59e0b;
+    color: #f59e0b;
+}
+.badge-suspendido {
+    background: rgba(217, 119, 6, 0.2);
+    border: 1px solid #d97706;
+    color: #fbbf24;
+}
+.badge-pausa {
+    background: rgba(245, 158, 11, 0.15);
+    border: 1px solid #d97706;
+    color: #fbbf24;
+}
+.badge-prorroga {
+    background: rgba(168, 85, 247, 0.2);
+    border: 1px solid #a855f7;
+    color: #c084fc;
+}
+.badge-penales {
+    background: rgba(236, 72, 153, 0.2);
+    border: 1px solid #ec4899;
+    color: #f472b6;
+}
+
+/* ==========================================================================
+   AJUSTES RESPONSIVOS (MOBILE / TABLET)
+   ========================================================================== */
+@media (max-width: 768px) {
+    html, body {
+        width: 100% !important;
+        max-width: 100vw !important;
+        overflow-x: hidden !important;
+    }
+
+    .admin-container {
+        padding: 8px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    /* Pestañas de navegación de pestañas con scroll fluido */
+    .admin-tabs-nav {
+        display: flex !important;
+        overflow-x: auto !important;
+        white-space: nowrap !important;
+        -webkit-overflow-scrolling: touch !important;
+        gap: 6px !important;
+        padding-bottom: 6px !important;
+        scrollbar-width: none !important;
+    }
+    .admin-tab-btn {
+        flex: 0 0 auto !important;
+        font-size: 12px !important;
+        padding: 8px 12px !important;
+    }
+
+    .admin-card {
+        padding: 12px !important;
+        margin-bottom: 15px !important;
+        box-sizing: border-box !important;
+    }
+    .form-grid {
+        grid-template-columns: 1fr !important;
+        gap: 10px !important;
+    }
+    .form-group[style*="span 2"] {
+        grid-column: span 1 !important;
+    }
+
+    /* Tablas Administrativas:
+       Texto normal en horizontal, scroll suave solo dentro de la tabla para no romper la pantalla */
+    .admin-table-wrapper {
+        width: 100% !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        border: 1px solid #2a2b32;
+        border-radius: 6px;
+        margin-top: 8px;
+    }
+    .admin-table {
+        width: 100% !important;
+        min-width: 580px !important;
+        table-layout: auto !important;
+        white-space: nowrap !important;
+    }
+    .admin-table th, .admin-table td {
+        padding: 8px 12px !important;
+        font-size: 12px !important;
+        word-break: normal !important;
+        text-align: left !important;
+    }
+    .admin-table button, .admin-table .btn-secondary, .admin-table .btn-primary {
+        padding: 5px 8px !important;
+        font-size: 11px !important;
+        margin: 2px !important;
+    }
+
+    /* Mesa Técnica compacta (la que ya se veía perfecta) */
+    #mesa-vista-activa {
+        padding: 4px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+    .mesa-board {
+        padding: 10px 6px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+    .mesa-active-banner {
+        flex-wrap: wrap !important;
+        gap: 8px !important;
+        justify-content: space-between !important;
+    }
+    .mesa-teams-grid {
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        align-items: flex-start !important;
+        gap: 4px !important;
+    }
+    .mesa-team-col {
+        flex: 1 1 30% !important;
+        min-width: 0 !important;
+        padding: 2px !important;
+        text-align: center !important;
+    }
+    .mesa-team-name {
+        font-size: 13px !important;
+        line-height: 1.2 !important;
+        word-break: break-word !important;
+        display: -webkit-box !important;
+        -webkit-line-clamp: 2 !important;
+        -webkit-box-orient: vertical !important;
+        overflow: hidden !important;
+    }
+    .mesa-big-score {
+        font-size: 2.2rem !important;
+        line-height: 1 !important;
+        margin: 4px 0 !important;
+    }
+    .mesa-score-btns {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+        gap: 3px !important;
+    }
+    .btn-score-adjust {
+        min-width: 32px !important;
+        height: 32px !important;
+        padding: 2px 4px !important;
+        font-size: 11px !important;
+    }
+    .mesa-center-controls {
+        flex: 1 1 38% !important;
+        min-width: 0 !important;
+        padding: 0 4px !important;
+    }
+    #mesa-container-minuto, #mesa-container-outs {
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+}
+
+

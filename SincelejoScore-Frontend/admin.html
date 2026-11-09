@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración - SincelejoScore</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+
+    <!-- Header Panel Admin -->
+    <header class="admin-header">
+        <div class="logo">
+            SINCELEJO<span>SCORE</span>
+            <span style="font-size: 13px; color: #888; font-weight: normal; margin-left: 10px;">| PANEL DE ADMINISTRACIÓN</span>
+        </div>
+        <a href="index.html" class="admin-nav-public-btn">
+            🌐 Ir a Marcadores Públicos
+        </a>
+    </header>
+
+    <!-- Barra de Navegación por Pestañas -->
+    <nav class="admin-tabs-nav">
+        <button class="admin-tab-btn active" data-tab="tab-torneos">🏆 1. Torneos y Sedes</button>
+        <button class="admin-tab-btn" data-tab="tab-equipos">🛡️ 2. Equipos y Nóminas</button>
+        <button class="admin-tab-btn" data-tab="tab-fixture">📅 3. Programación y Fixture</button>
+        <button class="admin-tab-btn" data-tab="tab-mesa">⏱️ 4. Mesa Técnica en Vivo</button>
+    </nav>
+
+    <!-- Contenedor Principal -->
+    <main class="admin-container">
+
+        <!-- ===================================================================
+             PESTAÑA 1: TORNEOS Y SEDES
+             =================================================================== -->
+        <section id="tab-torneos" class="admin-tab-pane">
+            <div class="admin-card">
+                <div class="admin-card-header">
+                    <h3 class="admin-card-title" id="torneo-form-title">🏆 Registrar Nuevo Torneo</h3>
+                    <button type="button" class="btn-secondary" id="btn-limpiar-torneo">Nuevo Torneo</button>
+                </div>
+                <form id="form-torneo">
+                    <input type="hidden" id="torneo-id">
+                    <div class="form-grid">
+                        <div class="form-group" style="grid-column: span 2;">
+                            <label for="torneo-nombre">Nombre del Torneo *</label>
+                            <input type="text" id="torneo-nombre" class="form-control" placeholder="Ej. ALMAGRARIO INACTIVOS" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="torneo-deporte">Deporte *</label>
+                            <select id="torneo-deporte" class="form-control" required></select>
+                        </div>
+                        <div class="form-group">
+                            <label for="torneo-cancha">Cancha Sede Fija (Regla Institucional)</label>
+                            <select id="torneo-cancha" class="form-control"></select>
+                        </div>
+                        <div class="form-group">
+                            <label for="torneo-temporada">Temporada</label>
+                            <input type="text" id="torneo-temporada" class="form-control" value="2026">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-checkbox-label">
+                                <input type="checkbox" id="torneo-multicancha">
+                                <span><strong>Es Multicancha</strong> (Excepción Categorías Menores)</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <button type="submit" class="btn-primary" id="btn-guardar-torneo">💾 Guardar Torneo</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="admin-card">
+                <div class="admin-card-header">
+                    <h3 class="admin-card-title">📋 Torneos Registrados</h3>
+                    <input type="text" id="filtro-buscar-torneo" class="form-control" placeholder="Buscar torneo o deporte..." style="max-width: 280px;">
+                </div>
+                <div class="admin-table-wrapper">
+                    <table class="admin-table" id="tabla-torneos">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Nombre Torneo</th>
+                                <th>Deporte</th>
+                                <th>Cancha Sede Fija</th>
+                                <th>Régimen</th>
+                                <th>Temporada</th>
+                                <th style="text-align: center;">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-torneos-body"></tbody>
+                    </table>
+                </div>
+            </div>
+            </div> <!-- Fin #mesa-vista-activa -->
+        </section>
+
+        <!-- ===================================================================
+             PESTAÑA 2: EQUIPOS Y NÓMINAS
+             =================================================================== -->
+        <section id="tab-equipos" class="admin-tab-pane hidden">
+            <div class="admin-card">
+                <div class="admin-card-header">
+                    <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
+                        <h3 class="admin-card-title">🛡️ Gestión de Equipos</h3>
+                        <select id="filtro-equipo-torneo" class="form-control" style="min-width: 250px;">
+                            <option value="">-- Todos los Torneos --</option>
+                        </select>
+                    </div>
+                    <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                        <button type="button" class="btn-secondary" id="btn-abrir-modal-excel">📂 Cargar Excel</button>
+                        <button class="btn-primary" id="btn-abrir-modal-equipo">+ Nuevo Equipo</button>
+                    </div>
+                </div>
+                <div class="admin-table-wrapper">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Nombre del Equipo</th>
+                                <th>Delegación</th>
+                                <th>Torneo Inscrito</th>
+                                <th style="text-align: center;">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-equipos-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================================================================
+             PESTAÑA 3: PROGRAMACIÓN Y FIXTURE
+             =================================================================== -->
+        <section id="tab-fixture" class="admin-tab-pane hidden">
+            <div class="admin-card">
+                <div class="admin-card-header">
+                    <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
+                        <h3 class="admin-card-title">📅 Torneo para Programación:</h3>
+                        <select id="fixture-torneo-select" name="select-torneo-programacion" class="form-control" style="min-width: 260px;"></select>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <label for="fixture-vueltas-select" style="font-size: 13px; color: #a1a1aa; font-weight: 600; white-space: nowrap;">Rondas / Vueltas:</label>
+                            <select id="fixture-vueltas-select" class="form-control" style="min-width: 175px;">
+                                <option value="1" selected>1 Vuelta (Ida)</option>
+                                <option value="2">2 Vueltas (Ida y Vuelta)</option>
+                                <option value="3">3 Vueltas</option>
+                                <option value="4">4 Vueltas</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                        <button class="btn-success" id="btn-generar-fixture">⚡ Generar Fixture Automático</button>
+                        <button class="btn-primary" id="btn-nuevo-partido-manual">+ Programar Partido Manual</button>
+                    </div>
+                </div>
+
+                <!-- Formulario desplegable para crear/editar partido -->
+                <div id="form-partido-container" class="hidden" style="background: #141418; padding: 18px; border-radius: 8px; border: 1px dashed #3a3a46; margin-bottom: 20px;">
+                    <h4 style="margin: 0 0 14px; color: #ff0044;" id="partido-form-title">Programar Partido</h4>
+                    <form id="form-partido">
+                        <input type="hidden" id="partido-id">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="partido-jornada">Jornada / Fecha #</label>
+                                <input type="number" id="partido-jornada" class="form-control" value="1" min="1" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="partido-local">Equipo Local *</label>
+                                <select id="partido-local" class="form-control" required></select>
+                            </div>
+                            <div class="form-group">
+                                <label for="partido-visitante">Equipo Visitante *</label>
+                                <select id="partido-visitante" class="form-control" required></select>
+                            </div>
+                            <div class="form-group">
+                                <label for="partido-cancha">Cancha / Sede *</label>
+                                <select id="partido-cancha" class="form-control" required></select>
+                            </div>
+                            <div class="form-group">
+                                <label for="partido-fechahora">Fecha y Hora *</label>
+                                <input type="datetime-local" id="partido-fechahora" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="partido-estado">Estado Inicial</label>
+                                <select id="partido-estado" class="form-control">
+                                    <option value="PROGRAMADO">PROGRAMADO</option>
+                                    <option value="EN_JUEGO">EN_JUEGO</option>
+                                    <option value="FINALIZADO">FINALIZADO</option>
+                                    <option value="CANCELADO">CANCELADO</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 10px; margin-top: 10px;">
+                            <button type="submit" class="btn-primary">💾 Guardar Partido</button>
+                            <button type="button" class="btn-secondary" id="btn-cancelar-partido">Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Tabla de Partidos Programados -->
+                <div class="admin-table-wrapper">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Jornada</th>
+                                <th>Fecha / Hora</th>
+                                <th>Cancha</th>
+                                <th>Encuentro</th>
+                                <th>Marcador</th>
+                                <th>Estado</th>
+                                <th style="text-align: center;">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-fixture-body"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- =======================================================
+                 TARJETA: FASES FINALES / PLAYOFFS (CUADRO)
+                 ======================================================= -->
+            <div class="admin-card" id="card-playoffs-admin" style="margin-top: 24px; border: 1px solid #3a1c28;">
+                <div class="admin-card-header" style="flex-wrap: wrap; gap: 14px; background: #191418;">
+                    <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                        <h3 class="admin-card-title" style="color: #ff0044; margin: 0; display: flex; align-items: center; gap: 8px;">
+                            ⚡ Fases Finales / Playoffs (Cuadro)
+                        </h3>
+                        <span id="badge-estado-fase-regular" style="background: #2a2024; color: #f59e0b; border: 1px solid #d97706; padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: 700;">
+                            ⏳ Verificando fase regular...
+                        </span>
+                    </div>
+                    <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                        <button type="button" class="btn-secondary" id="btn-sincronizar-playoffs" style="border-color: #00d2ff; color: #00d2ff; display: inline-flex; align-items: center; gap: 6px; font-weight: 700; font-size: 13px; padding: 8px 14px; border-radius: 6px; cursor: pointer;" title="Evalúa llaves finalizadas y genera los partidos oficiales de la siguiente fase en la base de datos">
+                            🔄 Sincronizar Fases Siguientes
+                        </button>
+                        <button class="btn-success" id="btn-configurar-playoffs" disabled style="opacity: 0.5; cursor: not-allowed;">
+                            🏆 Configurar y Generar Fases Finales
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Panel interactivo de configuración y sembrado de llaves -->
+                <div id="panel-config-playoffs" class="hidden" style="background: #141418; padding: 18px; border-radius: 8px; border: 1px dashed #ff0044; margin-top: 16px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 16px; border-bottom: 1px solid #2a2a34; padding-bottom: 12px;">
+                        <div style="display: flex; align-items: center; gap: 14px; flex-wrap: wrap;">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <label for="playoff-ronda-inicial" style="font-weight: 700; font-size: 13px; color: #e1e1e6; white-space: nowrap;">Ronda Inicial:</label>
+                                <select id="playoff-ronda-inicial" class="form-control" style="min-width: 210px;">
+                                    <option value="16">Octavos de Final (16 equipos)</option>
+                                    <option value="8" selected>Cuartos de Final (8 equipos)</option>
+                                    <option value="4">Semifinales (4 equipos)</option>
+                                    <option value="2">Gran Final (2 equipos)</option>
+                                </select>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <label for="playoff-formato-serie" style="font-weight: 700; font-size: 13px; color: #e1e1e6; white-space: nowrap;">Formato de Serie / Llave:</label>
+                                <select id="playoff-formato-serie" class="form-control" style="min-width: 210px;">
+                                    <option value="unico" selected>Partido Único</option>
+                                    <option value="ida_vuelta">Ida y Vuelta (Global)</option>
+                                    <option value="best_of_3">Al mejor de 3 (Gana 2)</option>
+                                    <option value="best_of_5">Al mejor de 5 (Gana 3)</option>
+                                    <option value="best_of_7">Al mejor de 7 (Gana 4)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                            <button type="button" class="btn-secondary" id="btn-sembrar-posiciones" style="border-color: #ff0044; color: #ff0044;">
+                                🎯 Sembrar según Tabla de Posiciones
+                            </button>
+                            <button type="button" class="btn-success" id="btn-publicar-playoffs">
+                                💾 Publicar Llaves y Habilitar Cuadro
+                            </button>
+                            <button type="button" class="btn-secondary" id="btn-cancelar-playoffs">
+                                Cancelar
+                            </button>
+                        </div>
+                    </div>
+
+                    <div style="font-size: 12px; color: #8d8d99; margin-bottom: 14px;">
+                        💡 <em>Sembrado reglamentario automático: Cruza 1º vs Último y 2º vs Penúltimo protegiendo mitades opuestas del cuadro para que el 1º y 2º solo puedan enfrentarse en la Final. Puedes modificar manualmente cualquier equipo si el comité lo dispone.</em>
+                    </div>
+
+                    <div id="playoff-llaves-container" class="form-grid" style="grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px;">
+                        <!-- Se inyectan dinámicamente las tarjetas de cada llave -->
+                    </div>
+                </div>
+
+                <!-- Tabla resumen de partidos de playoffs ya registrados -->
+                <div id="resumen-playoffs-registrados" class="admin-table-wrapper hidden" style="margin-top: 16px;">
+                    <div style="background: #191920; padding: 10px 14px; font-weight: 700; font-size: 13px; color: #fff; border-bottom: 1px solid #2a2a34; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <span>📋 Partidos de Playoffs Registrados en este Torneo</span>
+                            <span id="contador-partidos-playoffs" style="font-size: 11px; color: #ff0044;">0 partidos</span>
+                        </div>
+                        <button type="button" class="btn-secondary btn-sm" id="btn-sincronizar-playoffs-tabla" style="border-color: #00d2ff; color: #00d2ff; display: inline-flex; align-items: center; gap: 6px; font-size: 11px; padding: 4px 10px; font-weight: 700; cursor: pointer;" title="Verificar llaves concluidas y generar la siguiente ronda en la base de datos">
+                            🔄 Sincronizar Fases Siguientes
+                        </button>
+                    </div>
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Fase / Llave</th>
+                                <th>Fecha / Hora</th>
+                                <th>Cancha</th>
+                                <th>Encuentro</th>
+                                <th>Marcador</th>
+                                <th>Estado</th>
+                                <th style="text-align: center;">Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-playoffs-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================================================================
+             PESTAÑA 4: MESA TÉCNICA EN VIVO
+             =================================================================== -->
+        <section id="tab-mesa" class="admin-tab-pane hidden">
+
+            <!-- VISTA 4.1: LISTADO VISUAL DE PARTIDOS EN JUEGO Y DE HOY -->
+            <div id="mesa-vista-lista">
+                <div class="admin-card" style="margin-bottom: 20px;">
+                    <div class="admin-card-header" style="flex-wrap: wrap; gap: 12px;">
+                        <div>
+                            <h3 class="admin-card-title" style="display: flex; align-items: center; gap: 8px;">
+                                ⏱️ Partidos en Vivo y de Hoy
+                                <span class="badge-status badge-vivo" style="font-size: 11px;">MESA ACTIVA</span>
+                            </h3>
+                            <span style="font-size: 12px; color: #888;">
+                                Selecciona un partido en desarrollo o programado para hoy para abrir su consola de control táctil interactiva.
+                            </span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <label style="font-size: 12px; color: #aaa; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                                <input type="checkbox" id="chk-mostrar-todos-partidos-mesa">
+                                <span>Mostrar todos los partidos</span>
+                            </label>
+                            <button type="button" class="btn-secondary" id="btn-refrescar-lista-mesa">🔄 Refrescar Lista</button>
+                        </div>
+                    </div>
+
+                    <!-- Contenedor de Tarjetas de Partidos por Torneo -->
+                    <div id="mesa-lista-cards">
+                        <p style="text-align: center; color: #888; padding: 30px;">Cargando partidos en vivo...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VISTA 4.2: CONSOLA DE CONTROL TÁCTIL INTERACTIVA -->
+            <div id="mesa-vista-activa" class="hidden">
+                <!-- Barra Superior de la Mesa Activa -->
+                <div class="mesa-active-banner">
+                    <button type="button" class="btn-secondary" id="btn-volver-lista-mesa">
+                        ← Volver al Listado de Partidos
+                    </button>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span class="badge-status badge-vivo" id="mesa-live-indicator">
+                            🔴 EN VIVO (Auto-sync 10s)
+                        </span>
+                        <span id="mesa-sync-time" style="font-size: 11px; color: #888;"></span>
+                        <button type="button" class="btn-secondary" id="btn-recargar-mesa" title="Sincronizar ahora">
+                            🔄 Sincronizar
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Tablero de Marcador en Vivo -->
+                <div class="mesa-board" id="mesa-board">
+                <div class="mesa-match-meta" id="mesa-meta">Selecciona un partido para iniciar la mesa técnica</div>
+
+                <div class="mesa-teams-grid">
+                    <!-- Lado Local -->
+                    <div class="mesa-team-col">
+                        <span class="mesa-team-name" id="mesa-nom-local">Local</span>
+                        <span id="mesa-rol-local" class="mesa-rol-deporte hidden" style="font-size: 11px; font-weight: 800; padding: 2px 8px; border-radius: 4px; margin-top: 4px; display: inline-block;"></span>
+                        <div id="mesa-vol-sets-local" class="hidden" style="font-size: 13px; font-weight: 800; color: #2ed573; margin-top: 4px; background: rgba(46, 213, 115, 0.15); border: 1px solid #2ed573; padding: 2px 8px; border-radius: 4px;">SETS: <span id="mesa-sets-val-local">0</span></div>
+                        <div class="mesa-big-score" id="mesa-score-local">0</div>
+                        <div id="mesa-score-sub-local" style="font-size: 11px; color: #888; margin-top: -4px; margin-bottom: 6px;"></div>
+                        <div class="mesa-score-btns">
+                            <button type="button" class="btn-score-adjust" onclick="ajustarPuntos('local', 1)">+1</button>
+                            <button type="button" class="btn-score-adjust" onclick="ajustarPuntos('local', -1)">-1</button>
+                            <button type="button" class="btn-score-adjust btn-baloncesto hidden" onclick="ajustarPuntos('local', 2)">+2</button>
+                            <button type="button" class="btn-score-adjust btn-baloncesto hidden" onclick="ajustarPuntos('local', 3)">+3</button>
+                        </div>
+                    </div>
+
+                    <!-- Centro: Sub-Estados Flashscore y Tiempo -->
+                    <div class="mesa-center-controls">
+                        <span class="mesa-status-pill" id="mesa-badge-vivo">🔴 EN VIVO</span>
+                        
+                        <div style="display: flex; flex-direction: column; gap: 6px; width: 180px;">
+                            <label id="mesa-label-estado-detalle" style="font-size: 11px; color: #aaa; text-transform: uppercase;">Sub-Estado Flashscore:</label>
+                            <select id="mesa-estado-detalle" class="form-control" style="text-align: center; font-weight: 700; color: #ff0044;">
+                                <option value="1T">1T (Primer Tiempo)</option>
+                                <option value="DESCANSO">DESCANSO</option>
+                                <option value="2T">2T (Segundo Tiempo)</option>
+                                <option value="Q1">Q1 (1° Cuarto)</option>
+                                <option value="Q2">Q2 (2° Cuarto)</option>
+                                <option value="Q3">Q3 (3° Cuarto)</option>
+                                <option value="Q4">Q4 (4° Cuarto)</option>
+                                <option value="SET 1">SET 1</option>
+                                <option value="SET 2">SET 2</option>
+                                <option value="SET 3">SET 3</option>
+                                <option value="SET 4">SET 4</option>
+                                <option value="SET 5">SET 5</option>
+                                <option value="INNING 1">INNING 1</option>
+                                <option value="INNING 2">INNING 2</option>
+                                <option value="INNING 3">INNING 3</option>
+                                <option value="INNING 4">INNING 4</option>
+                                <option value="INNING 5">INNING 5</option>
+                                <option value="INNING 6">INNING 6</option>
+                                <option value="INNING 7">INNING 7</option>
+                                <option value="INNING 8">INNING 8</option>
+                                <option value="INNING 9">INNING 9</option>
+                                <option value="FINALIZADO">FINALIZADO</option>
+                            </select>
+                        </div>
+
+                        <!-- Control de Outs (Béisbol / Sóftbol) -->
+                        <div id="mesa-container-outs" class="hidden" style="display: flex; flex-direction: column; align-items: center; gap: 6px; width: 180px; background: #16171c; border: 1px solid #2a2b32; border-radius: 8px; padding: 8px 10px;">
+                            <label style="font-size: 11px; color: #aaa; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">⚾ Control de Outs:</label>
+                            <div style="display: flex; align-items: center; gap: 8px; margin: 4px 0;">
+                                <span class="out-dot" id="out-dot-1"></span>
+                                <span class="out-dot" id="out-dot-2"></span>
+                                <span class="out-dot" id="out-dot-3"></span>
+                                <span id="mesa-outs-texto" style="font-weight: 800; font-size: 13px; color: #fff; margin-left: 4px;">OUTS: [ 0 / 3 ]</span>
+                            </div>
+                            <div style="display: flex; gap: 6px; width: 100%;">
+                                <button type="button" class="btn-secondary" onclick="sumarOut()" style="flex: 1; padding: 4px 8px; font-size: 11px; font-weight: 800; color: #ffeb3b; border-color: #f59e0b;">+1 OUT</button>
+                                <button type="button" class="btn-secondary" onclick="resetearOuts()" style="padding: 4px 8px; font-size: 11px; color: #aaa;">0</button>
+                            </div>
+                        </div>
+
+                        <div id="mesa-container-minuto" style="display: flex; flex-direction: column; gap: 6px; width: 170px;">
+                            <label style="font-size: 11px; color: #aaa; text-transform: uppercase;">Minuto de Juego:</label>
+                            <div style="display: flex; gap: 4px; align-items: center;">
+                                <button type="button" class="btn-secondary" onclick="ajustarMinutoMesa(-1)" style="padding: 4px 7px; font-weight: 800; font-size: 11px;" title="Restar 1 minuto">-1'</button>
+                                <input type="number" id="mesa-minuto-actual" class="form-control" style="text-align: center; font-weight: 700; flex: 1; padding: 4px 6px; pointer-events: auto; cursor: text;" min="0" placeholder="0" autocomplete="off">
+                                <button type="button" class="btn-secondary" onclick="ajustarMinutoMesa(1)" style="padding: 4px 7px; font-weight: 800; font-size: 11px; color: #2ed573;" title="Sumar 1 minuto">+1'</button>
+                                <button type="button" class="btn-secondary" onclick="ajustarMinutoMesa(5)" style="padding: 4px 7px; font-weight: 800; font-size: 11px; color: #00d2ff;" title="Sumar 5 minutos">+5'</button>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; flex-direction: column; gap: 6px; width: 180px;">
+                            <label style="font-size: 11px; color: #aaa; text-transform: uppercase;">Estado General:</label>
+                            <select id="mesa-estado-general" class="form-control" style="text-align: center;">
+                                <option value="EN_JUEGO">EN_JUEGO</option>
+                                <option value="FINALIZADO">FINALIZADO</option>
+                                <option value="PROGRAMADO">PROGRAMADO</option>
+                                <option value="RETRASADO">⏳ RETRASADO</option>
+                                <option value="SUSPENDIDO">⚠️ SUSPENDIDO</option>
+                                <option value="APLAZADO">APLAZADO</option>
+                                <option value="CANCELADO">CANCELADO</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Lado Visitante -->
+                    <div class="mesa-team-col">
+                        <span class="mesa-team-name" id="mesa-nom-visit">Visitante</span>
+                        <span id="mesa-rol-visit" class="mesa-rol-deporte hidden" style="font-size: 11px; font-weight: 800; padding: 2px 8px; border-radius: 4px; margin-top: 4px; display: inline-block;"></span>
+                        <div id="mesa-vol-sets-visit" class="hidden" style="font-size: 13px; font-weight: 800; color: #2ed573; margin-top: 4px; background: rgba(46, 213, 115, 0.15); border: 1px solid #2ed573; padding: 2px 8px; border-radius: 4px;">SETS: <span id="mesa-sets-val-visit">0</span></div>
+                        <div class="mesa-big-score" id="mesa-score-visit">0</div>
+                        <div id="mesa-score-sub-visit" style="font-size: 11px; color: #888; margin-top: -4px; margin-bottom: 6px;"></div>
+                        <div class="mesa-score-btns">
+                            <button type="button" class="btn-score-adjust" onclick="ajustarPuntos('visit', 1)">+1</button>
+                            <button type="button" class="btn-score-adjust" onclick="ajustarPuntos('visit', -1)">-1</button>
+                            <button type="button" class="btn-score-adjust btn-baloncesto hidden" onclick="ajustarPuntos('visit', 2)">+2</button>
+                            <button type="button" class="btn-score-adjust btn-baloncesto hidden" onclick="ajustarPuntos('visit', 3)">+3</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Resumen de Sets Voleibol -->
+                <div id="mesa-vol-summary" class="hidden" style="margin-top: 14px; padding: 8px 14px; background: #16171c; border: 1px solid #2a2b32; border-radius: 6px; font-size: 12px; color: #00d2ff; text-align: center; font-weight: 700;"></div>
+
+                <!-- Banner de Detección de Knockout (Mercy Rule) -->
+                <div id="mesa-alerta-knockout" class="admin-alert-ko hidden" style="margin: 14px 0; background: rgba(225, 29, 72, 0.15); border: 1px solid #e11d48; border-radius: 8px; padding: 12px 16px;"></div>
+
+                <!-- Panel Operativo Híbrido: Control de Partidos, Pausas, Periodos y Definiciones -->
+                <div id="mesa-panel-operativo" style="margin-top: 16px; padding: 14px 18px; background: #15161c; border: 1px solid #2c2d38; border-radius: 8px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; border-bottom: 1px solid #242530; padding-bottom: 8px;">
+                        <span style="font-size: 12px; font-weight: 800; color: #00d2ff; text-transform: uppercase; letter-spacing: 0.5px; display: inline-flex; align-items: center; gap: 6px;">
+                            ⏱️ Panel Operativo Reglamentario
+                        </span>
+                        <span id="mesa-operativo-info" style="font-size: 12px; color: #aaa; font-weight: 600;">Control Manual de Mesa Técnica</span>
+                    </div>
+
+                    <!-- Fila Principal de Botones Operativos Dinámicos -->
+                    <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; align-items: center;">
+                        <!-- Botón Iniciar Partido (para PROGRAMADO o RETRASADO) -->
+                        <button type="button" id="btn-mesa-iniciar" class="btn-primary" style="background: #10b981; border-color: #10b981; font-weight: 800; padding: 8px 20px; font-size: 13px;">
+                            ▶ Iniciar Partido
+                        </button>
+
+                        <!-- Botón Suspender Partido (Universal 6 deportes, cuando EN_JUEGO) -->
+                        <button type="button" id="btn-mesa-suspender" class="btn-secondary" style="color: #f59e0b; border-color: #f59e0b; font-weight: 700; padding: 8px 16px; font-size: 12px;">
+                            ⏸ Suspender Partido
+                        </button>
+
+                        <!-- Botón Reanudar Juego (cuando SUSPENDIDO) -->
+                        <button type="button" id="btn-mesa-reanudar" class="btn-primary hidden" style="background: #10b981; border-color: #10b981; font-weight: 800; padding: 8px 16px; font-size: 12px;">
+                            ▶ Reanudar Juego
+                        </button>
+
+                        <!-- Botón Aplazar / Reprogramar (cuando SUSPENDIDO o RETRASADO) -->
+                        <button type="button" id="btn-mesa-aplazar" class="btn-secondary hidden" style="color: #a1a1aa; border-color: #4b5563; font-weight: 700; padding: 8px 16px; font-size: 12px;">
+                            📅 Aplazar Partido
+                        </button>
+
+                        <!-- Controles de Periodo (Fútbol, Microfútbol, Baloncesto) -->
+                        <button type="button" id="btn-mesa-fin-periodo" class="btn-secondary" style="color: #38bdf8; border-color: #38bdf8; font-weight: 700; padding: 8px 16px; font-size: 12px;">
+                            🛑 Fin de Periodo
+                        </button>
+                        <button type="button" id="btn-mesa-siguiente-periodo" class="btn-primary" style="background: #6366f1; border-color: #6366f1; font-weight: 700; padding: 8px 16px; font-size: 12px;">
+                            ▶ Iniciar Siguiente Periodo
+                        </button>
+
+                        <!-- Pausas de Reloj Neto (Microfútbol y Baloncesto) -->
+                        <button type="button" id="btn-mesa-pausa-reloj" class="btn-secondary" style="color: #f59e0b; border-color: #d97706; font-weight: 700; padding: 8px 14px; font-size: 12px;">
+                            ⏸ Pausar / Balón Fuera
+                        </button>
+                        <button type="button" id="btn-mesa-tiempo-muerto" class="btn-secondary" style="color: #ec4899; border-color: #ec4899; font-weight: 700; padding: 8px 14px; font-size: 12px;">
+                            ⏸ Tiempo Muerto
+                        </button>
+                        <button type="button" id="btn-mesa-reanudar-reloj" class="btn-secondary hidden" style="color: #2ed573; border-color: #2ed573; font-weight: 700; padding: 8px 14px; font-size: 12px;">
+                            ▶ Reanudar Reloj
+                        </button>
+
+                        <!-- Baloncesto: Iniciar Prórroga / Tiempo Extra (OT) -->
+                        <button type="button" id="btn-mesa-iniciar-ot" class="btn-secondary hidden" style="color: #fbbf24; border-color: #f59e0b; font-weight: 800; padding: 8px 18px; font-size: 12px; background: rgba(245, 158, 11, 0.1);">
+                            ⚡ Iniciar Tiempo Extra (OT)
+                        </button>
+                    </div>
+
+                    <!-- Módulo Interactivo de Tanda de Penales (Playoffs Fútbol / Microfútbol) -->
+                    <div id="mesa-modulo-penales" data-alias="contenedor-penales" class="hidden" style="margin-top: 14px; padding: 16px; background: #16171e; border: 2px solid #e11d48; border-radius: 8px; text-align: center; box-shadow: 0 4px 20px rgba(225, 29, 72, 0.25);">
+                        <!-- Cabecera -->
+                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #282936; padding-bottom: 10px; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+                            <div style="font-weight: 900; color: #ff0044; font-size: 13.5px; letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px;">
+                                <span>🥅</span> DEFINICIÓN POR TIROS DESDE EL PUNTO PENAL
+                            </div>
+                            <span id="penales-badge-fase" style="background: rgba(225, 29, 72, 0.15); border: 1px solid #e11d48; color: #fb7185; font-size: 11px; font-weight: 800; padding: 3px 10px; border-radius: 20px; text-transform: uppercase;">
+                                Tanda Inicial (5 tiros)
+                            </span>
+                        </div>
+
+                        <!-- Marcador en Vivo -->
+                        <div style="display: flex; justify-content: center; align-items: center; gap: 16px; margin: 12px 0;">
+                            <div style="flex: 1; text-align: right;">
+                                <div id="mesa-penales-nom-local" style="font-size: 13.5px; font-weight: 800; color: #fff;">Local</div>
+                            </div>
+                            <div style="background: #0f1015; border: 1px solid #2f303d; border-radius: 8px; padding: 4px 16px; font-family: monospace; font-size: 26px; font-weight: 900; color: #fff; letter-spacing: 2px; min-width: 105px;">
+                                <span id="penales-score-local" style="color: #38bdf8;">0</span>
+                                <span style="color: #64748b; margin: 0 4px;">-</span>
+                                <span id="penales-score-visit" style="color: #f43f5e;">0</span>
+                            </div>
+                            <div style="flex: 1; text-align: left;">
+                                <div id="mesa-penales-nom-visit" style="font-size: 13.5px; font-weight: 800; color: #fff;">Visitante</div>
+                            </div>
+                        </div>
+
+                        <!-- Indicadores visuales de tanda (Dots) -->
+                        <div style="display: flex; flex-direction: column; gap: 10px; margin: 14px 0; background: #0f1016; border: 1px solid #22232d; border-radius: 6px; padding: 12px;">
+                            <!-- Fila Local -->
+                            <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+                                <div style="width: 110px; text-align: left; font-size: 12px; font-weight: 700; color: #38bdf8; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                    🔵 <span id="penales-label-local">Local</span>
+                                </div>
+                                <div id="penales-dots-local" style="display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; align-items: center;">
+                                    <!-- Generado dinámicamente -->
+                                </div>
+                            </div>
+                            <!-- Fila Visitante -->
+                            <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+                                <div style="width: 110px; text-align: left; font-size: 12px; font-weight: 700; color: #f43f5e; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                    🔴 <span id="penales-label-visit">Visitante</span>
+                                </div>
+                                <div id="penales-dots-visit" style="display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; align-items: center;">
+                                    <!-- Generado dinámicamente -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Panel de Turno y Acciones Rápidas -->
+                        <div id="penales-panel-turno" style="background: #1c1d27; border: 1px dashed #3a3b4c; border-radius: 6px; padding: 12px; margin-bottom: 10px;">
+                            <div id="penales-turno-texto" style="font-size: 13.5px; font-weight: 800; color: #ffeb3b; margin-bottom: 10px;">
+                                Turno: 🔵 Local (Tiro 1)
+                            </div>
+                            <div style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
+                                <button type="button" id="btn-penal-gol" class="btn-success" style="background: #10b981; border: none; font-weight: 900; font-size: 13.5px; padding: 9px 24px; border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);">
+                                    ⚽ GOL
+                                </button>
+                                <button type="button" id="btn-penal-fallo" class="btn-danger" style="background: #ef4444; border: none; font-weight: 900; font-size: 13.5px; padding: 9px 24px; border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);">
+                                    ❌ FALLÓ
+                                </button>
+                                <button type="button" id="btn-penal-deshacer" class="btn-secondary" style="background: #374151; color: #e5e7eb; border: 1px solid #4b5563; font-weight: 700; font-size: 12px; padding: 9px 14px; border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;" title="Deshacer el último penal registrado">
+                                    ↩ Deshacer último tiro
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Estado de Finalización / Ganador Decidido -->
+                        <div id="penales-panel-finalizado" class="hidden" style="background: rgba(16, 185, 129, 0.12); border: 1px solid #10b981; border-radius: 6px; padding: 12px; margin-bottom: 10px;">
+                            <div id="penales-texto-ganador" style="font-size: 14.5px; font-weight: 900; color: #10b981; margin-bottom: 4px;">
+                                🏆 ¡Ganador definido por Penales!
+                            </div>
+                            <div id="penales-subtexto-ganador" style="font-size: 12px; color: #a7f3d0;">
+                                Aplicando resultado oficial y finalizando encuentro...
+                            </div>
+                        </div>
+
+                        <!-- Hidden inputs de respaldo para compatibilidad -->
+                        <input type="hidden" id="mesa-penales-val-local" value="0">
+                        <input type="hidden" id="mesa-penales-val-visit" value="0">
+
+                        <!-- Botón de Cerrar Módulo -->
+                        <div style="display: flex; justify-content: flex-end; margin-top: 4px;">
+                            <button type="button" id="btn-mesa-cancelar-penales" class="btn-secondary" style="padding: 4px 10px; font-size: 11px; background: transparent; border: 1px solid #374151; color: #9ca3af; cursor: pointer;">
+                                ✖ Cerrar Panel de Penales
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Botones de Acción de Mesa -->
+                <div class="mesa-actions-bar">
+                    <button type="button" class="btn-primary" id="btn-guardar-marcador" style="font-size: 14px; padding: 10px 24px;">
+                        💾 Aplicar Marcador y Estado
+                    </button>
+                    <button type="button" class="btn-secondary" id="btn-finalizar-partido-oficial" style="color: #ff4444; border-color: #ff4444;">
+                        🏁 Marcar como FINALIZADO
+                    </button>
+                </div>
+            </div>
+
+            <!-- Registro de Eventos e Incidencias -->
+            <div class="admin-card" id="mesa-container-incidencias">
+                <div class="admin-card-header">
+                    <h3 class="admin-card-title">⚽ Registro de Incidencias / Eventos del Partido</h3>
+                </div>
+                <form id="form-evento">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="evento-tipo">Tipo de Incidencia *</label>
+                            <select id="evento-tipo" class="form-control" required>
+                                <option value="GOL">⚽ Gol</option>
+                                <option value="AUTOGOL">⚽ Autogol</option>
+                                <option value="TARJETA_AMARILLA">🟨 Tarjeta Amarilla</option>
+                                <option value="TARJETA_AZUL">🟦 Tarjeta Azul</option>
+                                <option value="TARJETA_ROJA">🟥 Tarjeta Roja</option>
+                                <option value="PUNTO">🏀 Punto / Cesta</option>
+                                <option value="CARRERA">⚾ Carrera</option>
+                                <option value="SUSTITUCION">🔄 Sustitución</option>
+                                <option value="OTRO">📝 Comentario / Incidencia</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="evento-minuto">Minuto / Periodo *</label>
+                            <input type="text" id="evento-minuto" name="incidencia_minuto" class="form-control text-center" placeholder="Minuto" autocomplete="off" style="cursor: text;">
+                        </div>
+                        <div class="form-group" style="grid-column: span 2;">
+                            <label for="evento-jugador">Jugador Involucrado</label>
+                            <select id="evento-jugador" class="form-control">
+                                <option value="">-- Sin jugador específico / Anónimo --</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="grid-column: span 3;">
+                            <label for="evento-comentario">Comentario / Observación</label>
+                            <input type="text" id="evento-comentario" class="form-control" placeholder="Ej. Gol de tiro libre al ángulo derecho">
+                        </div>
+                        <div class="form-group" style="align-self: flex-end;">
+                            <button type="submit" class="btn-success">➕ Registrar Incidencia</button>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="admin-table-wrapper" style="margin-top: 16px;">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 80px;">Minuto</th>
+                                <th style="width: 140px;">Incidencia</th>
+                                <th>Jugador</th>
+                                <th>Detalle</th>
+                                <th style="text-align: center; width: 80px;">Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-eventos-body"></tbody>
+                    </table>
+                </div>
+            </div>
+            </div> <!-- Fin #mesa-vista-activa -->
+        </section>
+
+    </main>
+
+    <!-- ===================================================================
+         MODAL 1: REGISTRAR / EDITAR EQUIPO
+         =================================================================== -->
+    <div id="modal-equipo-admin" class="modal hidden">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3 id="modal-equipo-title" style="margin: 0; color: #ff0044;">Registrar Equipo</h3>
+                <button type="button" class="btn-cerrar" onclick="cerrarModal('modal-equipo-admin')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="form-equipo-admin">
+                    <input type="hidden" id="equipo-id">
+                    <div class="form-group" style="margin-bottom: 14px;">
+                        <label for="equipo-nombre">Nombre del Equipo *</label>
+                        <input type="text" id="equipo-nombre" class="form-control" placeholder="Ej. Real Sincelejo" required>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 14px;">
+                        <label for="equipo-delegacion">Delegación / Procedencia *</label>
+                        <input type="text" id="equipo-delegacion" class="form-control" placeholder="Ej. Sincelejo, Sucre" required>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 20px;">
+                        <label for="equipo-torneo-asignar">Torneo en que participa *</label>
+                        <select id="equipo-torneo-asignar" class="form-control" required></select>
+                    </div>
+                    <div style="display: flex; justify-content: flex-end; gap: 10px;">
+                        <button type="button" class="btn-secondary" onclick="cerrarModal('modal-equipo-admin')">Cancelar</button>
+                        <button type="submit" class="btn-primary">💾 Guardar Equipo</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================================================================
+         MODAL 2: GESTIÓN DE NÓMINA DE JUGADORES
+         =================================================================== -->
+    <div id="modal-nomina" class="modal hidden">
+        <div class="modal-content" style="max-width: 850px;">
+            <div class="modal-header">
+                <div>
+                    <h3 id="modal-nomina-title" style="margin: 0; color: #ff0044;">Nómina del Equipo</h3>
+                    <span id="modal-nomina-sub" style="font-size: 12px; color: #888;">Gestión de jugadores</span>
+                </div>
+                <button type="button" class="btn-cerrar" onclick="cerrarModal('modal-nomina')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!-- Formulario Agregar/Editar Jugador -->
+                <div style="background: #16161c; padding: 16px; border-radius: 6px; border: 1px solid #2a2a34; margin-bottom: 16px;">
+                    <h4 style="margin: 0 0 12px; font-size: 13px; color: #e1e1e6;">Inscribir / Editar Jugador</h4>
+                    <form id="form-jugador">
+                        <input type="hidden" id="jugador-id">
+                        <input type="hidden" id="jugador-equipo-id">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="jugador-nombre">Nombre Completo *</label>
+                                <input type="text" id="jugador-nombre" class="form-control" required placeholder="Ej. Carlos Martínez">
+                            </div>
+                            <div class="form-group">
+                                <label for="jugador-cedula">Cédula / Documento</label>
+                                <input type="text" id="jugador-cedula" class="form-control" placeholder="Ej. 1102847291">
+                            </div>
+                            <div class="form-group">
+                                <label for="jugador-dorsal">Dorsal (#)</label>
+                                <input type="number" id="jugador-dorsal" class="form-control" placeholder="10" min="0" max="99">
+                            </div>
+                            <div class="form-group">
+                                <label for="jugador-posicion">Posición</label>
+                                <input type="text" id="jugador-posicion" class="form-control" placeholder="Ej. Delantero, Base...">
+                            </div>
+                            <div class="form-group">
+                                <label for="jugador-edad">Edad</label>
+                                <input type="number" id="jugador-edad" class="form-control" placeholder="24" min="5" max="80">
+                            </div>
+                            <div class="form-group">
+                                <label for="jugador-estatura">Estatura (m)</label>
+                                <input type="number" step="0.01" id="jugador-estatura" class="form-control" placeholder="1.75">
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 10px; margin-top: 10px;">
+                            <button type="submit" class="btn-primary" id="btn-guardar-jugador">+ Guardar Jugador</button>
+                            <button type="button" class="btn-secondary" id="btn-limpiar-jugador">Nuevo</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Tabla de Jugadores de este Equipo -->
+                <div class="admin-table-wrapper" style="max-height: 350px; overflow-y: auto;">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Dorsal</th>
+                                <th>Nombre</th>
+                                <th>Cédula</th>
+                                <th>Posición</th>
+                                <th>Edad</th>
+                                <th>Estatura</th>
+                                <th style="text-align: center;">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-nomina-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================================================================
+         MODAL 3: CONFIRMACIÓN OSCURA PERSONALIZADA (SINCELEJOSCORE)
+         =================================================================== -->
+    <div id="modal-confirmacion-admin" class="modal hidden" style="z-index: 100000;">
+        <div class="modal-content" style="max-width: 460px; background: #16161c; border: 1px solid #3a1c28; border-radius: 8px; box-shadow: 0 10px 35px rgba(0,0,0,0.85); overflow: hidden;">
+            <div class="modal-header" style="background: #1b1419; border-bottom: 1px solid #2d1e25; padding: 14px 18px;">
+                <h3 id="modal-confirm-title" style="margin: 0; color: #ff0044; font-size: 15px; font-weight: 800; display: flex; align-items: center; gap: 8px;">
+                    ⚠️ Confirmación
+                </h3>
+                <button type="button" class="btn-cerrar" id="btn-cerrar-confirm-modal">&times;</button>
+            </div>
+            <div class="modal-body" style="padding: 18px;">
+                <p id="modal-confirm-message" style="margin: 0; color: #e1e1e6; font-size: 13.5px; line-height: 1.6; white-space: pre-line;">
+                    ¿Estás seguro de realizar esta acción?
+                </p>
+                <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 22px;">
+                    <button type="button" class="btn-secondary" id="btn-confirm-cancel" style="padding: 8px 16px;">Cancelar</button>
+                    <button type="button" class="btn-primary" id="btn-confirm-accept" style="padding: 8px 18px; font-weight: 700;">Aceptar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================================================================
+         MODAL 4: EDITAR PARTIDO DE PLAYOFF (FECHA, HORA, SEDE Y SERIES)
+         =================================================================== -->
+    <div id="modal-editar-partido" class="modal hidden">
+        <div class="modal-content" style="max-width: 560px; background: #16161c; border: 1px solid #3a1c28; border-radius: 8px; box-shadow: 0 10px 35px rgba(0,0,0,0.85); overflow: hidden;">
+            <div class="modal-header" style="background: #1b1419; border-bottom: 1px solid #2d1e25; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center;">
+                <h3 id="modal-editar-partido-title" style="margin: 0; color: #ff0044; font-size: 15px; font-weight: 800;">
+                    ✏️ Configuración y Programación de Llave / Serie
+                </h3>
+                <button type="button" class="btn-cerrar" onclick="cerrarModal('modal-editar-partido')">&times;</button>
+            </div>
+            <div class="modal-body" style="padding: 18px; max-height: 80vh; overflow-y: auto;">
+                <div id="modal-editar-partido-info" style="background: #1f1a24; border: 1px solid #33202e; border-radius: 6px; padding: 10px 14px; margin-bottom: 16px;">
+                    <div id="modal-editar-partido-fase" style="font-weight: 800; color: #ff0044; font-size: 12px; margin-bottom: 4px;">Fase</div>
+                    <div id="modal-editar-partido-encuentro" style="font-weight: 700; color: #ffffff; font-size: 14px;">Local vs Visitante</div>
+                </div>
+                <form id="form-editar-partido-playoff">
+                    <input type="hidden" id="edit-playoff-partido-id">
+
+                    <!-- Selector de Formato de Serie -->
+                    <div class="form-group" id="contenedor-formato-serie-modal" style="margin-bottom: 14px;">
+                        <label for="modal-select-formato-serie" style="font-size: 12px; color: #ff0044; margin-bottom: 5px; display: block; font-weight: 700;">
+                            ⚙️ Formato de Serie / Llave:
+                        </label>
+                        <select id="modal-select-formato-serie" class="form-control" style="width: 100%; font-size: 13px; font-weight: 600;">
+                            <option value="1">Partido Único</option>
+                            <option value="2">Ida y Vuelta (Global)</option>
+                            <option value="3">Al mejor de 3 (Gana 2)</option>
+                            <option value="5">Al mejor de 5 (Gana 3)</option>
+                            <option value="7">Al mejor de 7 (Gana 4)</option>
+                        </select>
+                    </div>
+
+                    <!-- Contenedor dinámico de juegos de la serie -->
+                    <div id="contenedor-juegos-serie-modal" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px;"></div>
+
+                    <div style="font-size: 11px; color: #888; margin-bottom: 16px; margin-top: 6px;">
+                        💡 Deja Fecha u Hora en blanco si el juego posterior aún está <strong>Por Definir</strong>.
+                    </div>
+                    <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px;">
+                        <button type="button" class="btn-secondary" onclick="cerrarModal('modal-editar-partido')">Cancelar</button>
+                        <button type="submit" class="btn-primary" style="background: #ff0044; border-color: #ff0044;">💾 Guardar Cambios</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================================================================
+         MODAL 5: CARGA MASIVA DESDE EXCEL (JUGADORES / EQUIPOS)
+         =================================================================== -->
+    <div id="modal-carga-excel" class="modal hidden">
+        <div class="modal-content" style="max-width: 600px; background: #16161c; border: 1px solid #3a1c28; border-radius: 8px; box-shadow: 0 10px 35px rgba(0,0,0,0.85); overflow: hidden;">
+            <div class="modal-header" style="background: #1b1419; border-bottom: 1px solid #2d1e25; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h3 id="modal-excel-title" style="margin: 0; color: #ff0044; font-size: 15px; font-weight: 800; display: flex; align-items: center; gap: 8px;">
+                        📂 Carga Masiva desde Excel
+                    </h3>
+                    <span style="font-size: 12px; color: #888;">Importación de nóminas y jugadores (.xlsx / .xls)</span>
+                </div>
+                <button type="button" class="btn-cerrar" onclick="cerrarModal('modal-carga-excel')">&times;</button>
+            </div>
+            <div class="modal-body" style="padding: 18px; max-height: 80vh; overflow-y: auto;">
+                <form id="form-carga-excel">
+                    <!-- Selector de Torneo -->
+                    <div class="form-group" style="margin-bottom: 14px;">
+                        <label for="excel-torneo-select">Torneo Destino *</label>
+                        <select id="excel-torneo-select" class="form-control" required>
+                            <option value="">-- Selecciona el Torneo --</option>
+                        </select>
+                    </div>
+
+                    <!-- Tipo de Carga -->
+                    <div class="form-group" style="margin-bottom: 14px;">
+                        <label for="excel-tipo-carga">Tipo de Entidad a Cargar *</label>
+                        <select id="excel-tipo-carga" class="form-control">
+                            <option value="jugadores" selected>Nómina de Jugadores (/api/jugadores/cargar-excel)</option>
+                            <option value="equipos">Equipos (/api/equipos/cargar-excel)</option>
+                        </select>
+                    </div>
+
+                    <!-- Input de Archivo -->
+                    <div class="form-group" style="margin-bottom: 18px;">
+                        <label for="excel-archivo-input">Archivo Excel (.xlsx, .xls) *</label>
+                        <input type="file" id="excel-archivo-input" class="form-control" accept=".xlsx, .xls" required style="padding: 7px 10px; cursor: pointer;">
+                        <small style="color: #888; font-size: 11px; margin-top: 4px; display: block;">
+                            Estructura jugadores: Col 1: Nombre | Col 2: Cédula | Col 3: Camiseta | Col 4: Posición | Col 5: Equipo | Col 6: Torneo | Col 7: Deporte
+                        </small>
+                    </div>
+
+                    <!-- Botones de Acción -->
+                    <div style="display: flex; justify-content: flex-end; gap: 10px; margin-bottom: 16px;">
+                        <button type="button" class="btn-secondary" onclick="cerrarModal('modal-carga-excel')">Cerrar / Cancelar</button>
+                        <button type="submit" class="btn-primary" id="btn-procesar-excel" style="background: #10b981; border-color: #10b981;">
+                            ⚡ Procesar Archivo
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Contenedor Visual del Reporte de Resultados -->
+                <div id="excel-reporte-container" class="hidden" style="margin-top: 14px; border-top: 1px solid #2a2a34; padding-top: 14px;">
+                    <h4 style="margin: 0 0 10px; font-size: 13px; color: #fff; display: flex; align-items: center; gap: 6px;">
+                        📊 Reporte de Procesamiento
+                    </h4>
+
+                    <!-- Resumen / Badges de Conteo -->
+                    <div id="excel-resumen-badges" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 12px;">
+                        <div style="background: #161e19; border: 1px solid #10b981; padding: 10px; border-radius: 6px; text-align: center;">
+                            <span style="font-size: 11px; color: #6ee7b7; text-transform: uppercase; font-weight: 700; display: block;">Insertados</span>
+                            <span id="excel-cant-insertados" style="font-size: 20px; font-weight: 900; color: #10b981;">0</span>
+                        </div>
+                        <div style="background: #241e17; border: 1px solid #f59e0b; padding: 10px; border-radius: 6px; text-align: center;">
+                            <span style="font-size: 11px; color: #fcd34d; text-transform: uppercase; font-weight: 700; display: block;">Omitidos</span>
+                            <span id="excel-cant-omitidos" style="font-size: 20px; font-weight: 900; color: #f59e0b;">0</span>
+                        </div>
+                        <div style="background: #23161a; border: 1px solid #ef4444; padding: 10px; border-radius: 6px; text-align: center;">
+                            <span style="font-size: 11px; color: #fca5a5; text-transform: uppercase; font-weight: 700; display: block;">Errores / Rechazos</span>
+                            <span id="excel-cant-errores" style="font-size: 20px; font-weight: 900; color: #ef4444;">0</span>
+                        </div>
+                    </div>
+
+                    <!-- Mensaje del Servidor -->
+                    <div id="excel-mensaje-servidor" style="padding: 10px 12px; border-radius: 6px; font-size: 12.5px; margin-bottom: 10px; background: #1c1d27; color: #e1e1e6; border: 1px solid #2e3040;"></div>
+
+                    <!-- Lista de Errores / Motivos -->
+                    <div id="excel-lista-errores-wrapper" class="hidden">
+                        <label style="font-size: 11.5px; color: #f87171; font-weight: 700; margin-bottom: 6px; display: block;">
+                            Detalle de Rechazos / Inconsistencias:
+                        </label>
+                        <div id="excel-lista-errores" style="max-height: 180px; overflow-y: auto; background: #0f1015; border: 1px solid #3a1c24; border-radius: 6px; padding: 8px 12px; font-size: 12px; color: #fca5a5; line-height: 1.5;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="admin.js"></script>
+</body>
+</html>
