@@ -567,39 +567,30 @@ function renderizarTorneos(deporteId) {
             return String(pTorneoId) === String(torneoId) && fechaP === fechaSeleccionadaStr;
         });
 
-        const tieneEnVivo = partidosTorneoHoy.some(p => {
+        const enVivoCount = partidosTorneoHoy.filter(p => {
             const st = (obtenerPropiedad(p, ['estado', 'Estado']) || '').toUpperCase();
             return st === 'EN_JUEGO' || st === 'EN VIVO' || st === 'JUGANDO';
-        });
+        }).length;
 
-        const liveBadgeTorneo = tieneEnVivo 
-            ? `<span style="background: #e11d48; color: #fff; font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 4px; margin-left: 8px;">🔴 EN VIVO</span>` 
+        const liveBadgeHtml = enVivoCount > 0 
+            ? `<span style="background: #e11d48; color: #ffffff; font-size: 11px; font-weight: 800; padding: 2px 7px; border-radius: 10px; display: inline-flex; align-items: center; gap: 3px;" title="${enVivoCount} partido(s) en vivo">🔴 ${enVivoCount}</span>` 
             : '';
-
-        const bloqueTorneo = document.createElement('div');
-        bloqueTorneo.style.marginBottom = '20px';
 
         const torneoCard = document.createElement('div');
         torneoCard.className = 'torneo-header-clickable';
         torneoCard.onclick = () => verDetalleTorneo(torneoId, nombreTorneo);
         torneoCard.innerHTML = `
-            <div style="display: flex; align-items: center; gap: 6px;">
-                <span style="font-weight: bold; color: #ff0044;">🏆 ${nombreTorneo}</span>
-                ${liveBadgeTorneo}
+            <div style="display: flex; align-items: center; gap: 8px; min-width: 0; overflow: hidden;">
+                <span style="font-weight: 800; color: #ff0044; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">🏆 ${nombreTorneo}</span>
             </div>
-            <span style="font-size: 12px; color: #8d8d99;">Ver tabla / clasificación →</span>
+            <div style="display: flex; align-items: center; gap: 8px; flex-shrink: 0; margin-left: 10px;">
+                ${liveBadgeHtml}
+                <span style="font-size: 13px; font-weight: 800; color: #ffffff; background: #2a2b33; padding: 2px 8px; border-radius: 10px;" title="${partidosTorneoHoy.length} partido(s)">${partidosTorneoHoy.length}</span>
+                <span style="font-size: 16px; color: #8d8d99; font-weight: 700; line-height: 1;">›</span>
+            </div>
         `;
-        bloqueTorneo.appendChild(torneoCard);
 
-        // Contenedor con los partidos del torneo para verlos de inmediato (estilo Flashscore)
-        const partidosContainer = document.createElement('div');
-        partidosTorneoHoy.forEach(p => {
-            const card = crearMatchCard(p);
-            partidosContainer.appendChild(card);
-        });
-        bloqueTorneo.appendChild(partidosContainer);
-
-        container.appendChild(bloqueTorneo);
+        container.appendChild(torneoCard);
     });
 }
 
@@ -852,23 +843,23 @@ function crearMatchCard(p, partidosModificados = []) {
 
     matchCard.innerHTML = `
         <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
-            <div style="display: flex; align-items: center; gap: 15px; flex: 1;">
+            <div style="display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0;">
                 <span style="font-size: 12px; font-weight: 700; color: #8d8d99; min-width: 42px;">
                     ${diaMes}
                 </span>
-                <div class="match-info" style="flex: 1; margin: 0;">
+                <div class="match-info" style="flex: 1; margin: 0; min-width: 0;">
                     ${labelTrasPenHtml}
-                    <div class="team" style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-                        <span style="${ganadorEsLocal ? 'font-weight: 800; color: #fff;' : (ganadorEsVisit ? 'color: #888;' : '')}">${nomLocal}${badgeBatLocal}${indAvanceLocal}</span>
-                        <span class="score" style="font-weight: 800; color: ${ganadorEsLocal ? '#10b981' : (ganadorEsVisit ? '#888' : '#ff0044')};">${scoreLocalRender}</span>
+                    <div class="team" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; min-width: 0;">
+                        <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; ${ganadorEsLocal ? 'font-weight: 800; color: #fff;' : (ganadorEsVisit ? 'color: #888;' : '')}">${nomLocal}${badgeBatLocal}${indAvanceLocal}</span>
+                        <span class="score" style="font-weight: 800; color: ${ganadorEsLocal ? '#10b981' : (ganadorEsVisit ? '#888' : '#ff0044')}; flex-shrink: 0; margin-left: 6px;">${scoreLocalRender}</span>
                     </div>
-                    <div class="team" style="display: flex; justify-content: space-between;">
-                        <span style="${ganadorEsVisit ? 'font-weight: 800; color: #fff;' : (ganadorEsLocal ? 'color: #888;' : '')}">${nomVisitante}${badgeBatVisit}${indAvanceVisit}</span>
-                        <span class="score" style="font-weight: 800; color: ${ganadorEsVisit ? '#10b981' : (ganadorEsLocal ? '#888' : '#ff0044')};">${scoreVisitRender}</span>
+                    <div class="team" style="display: flex; justify-content: space-between; align-items: center; min-width: 0;">
+                        <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; ${ganadorEsVisit ? 'font-weight: 800; color: #fff;' : (ganadorEsLocal ? 'color: #888;' : '')}">${nomVisitante}${badgeBatVisit}${indAvanceVisit}</span>
+                        <span class="score" style="font-weight: 800; color: ${ganadorEsVisit ? '#10b981' : (ganadorEsLocal ? '#888' : '#ff0044')}; flex-shrink: 0; margin-left: 6px;">${scoreVisitRender}</span>
                     </div>
                 </div>
             </div>
-            <div style="min-width: 85px; margin-left: 6px; text-align: right; flex-shrink: 0;">
+            <div style="min-width: 74px; margin-left: 6px; text-align: right; flex-shrink: 0;">
                 ${badgeDerecha}
             </div>
         </div>

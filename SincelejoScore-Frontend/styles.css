@@ -166,6 +166,7 @@ body {
 
 .match-info {
     flex-grow: 1;
+    min-width: 0;
 }
 
 .team {
@@ -1111,7 +1112,7 @@ body {
         gap: 8px !important;
     }
     .logo {
-        font-size: 18px !important;
+        font-size: 16px !important;
     }
     .search-box-header {
         width: 100% !important;
@@ -1120,49 +1121,11 @@ body {
     .search-box-header input {
         width: 100% !important;
         box-sizing: border-box !important;
-        font-size: 13px !important;
-        padding: 6px 30px 6px 12px !important;
+        font-size: 12px !important;
+        padding: 5px 28px 5px 10px !important;
     }
     .search-box-header input:focus {
         width: 100% !important;
-    }
-    .sub-tab-btn {
-        padding: 10px 14px !important;
-        font-size: 13px !important;
-    }
-    .scoreboard-header {
-        padding: 14px 8px !important;
-    }
-    .score-center {
-        min-width: 90px !important;
-        padding: 0 4px !important;
-    }
-    .big-score {
-        font-size: 24px !important;
-    }
-    .team-title {
-        font-size: 12px !important;
-    }
-    .team-crest {
-        font-size: 20px !important;
-    }
-    .tabla-score th, .tabla-score td {
-        padding: 8px 6px !important;
-        font-size: 12px !important;
-    }
-    .header-torneo-detalle {
-        padding: 12px 14px !important;
-        font-size: 15px !important;
-    }
-    .btn-volver {
-        padding: 6px 12px !important;
-        font-size: 13px !important;
-        margin-bottom: 10px !important;
-    }
-    .section-title {
-        font-size: 13px !important;
-        margin-bottom: 10px !important;
-        padding-left: 2px !important;
     }
     .sports-bar, .sub-nav-torneo, .match-status-filter-bar {
         display: flex !important;
@@ -1173,6 +1136,57 @@ body {
         padding-bottom: 4px !important;
         scrollbar-width: none !important;
     }
+    .sports-bar {
+        padding: 8px 8px 4px 8px !important;
+        gap: 3px !important;
+    }
+    .sport-btn {
+        font-size: 10px !important;
+        padding: 4px 7px !important;
+    }
+    .date-nav-btn {
+        font-size: 18px !important;
+        padding: 2px 6px !important;
+    }
+    .date-item {
+        min-width: 46px !important;
+        padding: 4px 2px !important;
+    }
+    .date-item .day-name {
+        font-size: 9px !important;
+    }
+    .date-item .day-num {
+        font-size: 10px !important;
+    }
+    .section-title {
+        font-size: 11px !important;
+        letter-spacing: 0.5px !important;
+        margin-bottom: 10px !important;
+        padding-left: 2px !important;
+    }
+    .btn-volver {
+        padding: 5px 10px !important;
+        font-size: 11px !important;
+        margin-bottom: 10px !important;
+    }
+    .header-torneo-detalle {
+        padding: 10px 12px !important;
+        font-size: 13px !important;
+    }
+    .sub-tab-btn {
+        padding: 8px 10px !important;
+        font-size: 11px !important;
+    }
+    .filter-status-btn {
+        font-size: 10px !important;
+        padding: 4px 9px !important;
+    }
+    .tabla-score th, .tabla-score td {
+        padding: 6px 5px !important;
+        font-size: 11px !important;
+    }
+
+    /* Modales de detalle en móvil */
     .modal-content, .modal-partido-content, .player-card-modal {
         width: 95% !important;
         max-width: 95% !important;
@@ -1182,6 +1196,47 @@ body {
     .modal-body {
         overflow-x: auto !important;
         -webkit-overflow-scrolling: touch !important;
+    }
+    .scoreboard-header {
+        padding: 14px 8px !important;
+    }
+    .score-center {
+        min-width: 90px !important;
+        padding: 0 4px !important;
+    }
+    .big-score {
+        font-size: 20px !important;
+    }
+    .team-title {
+        font-size: 11px !important;
+    }
+    .team-crest {
+        font-size: 20px !important;
+    }
+
+    /* Ajustes responsivos para encabezados de torneo y tarjetas de partidos */
+    .torneo-header-clickable {
+        font-size: 12px !important;
+        padding: 9px 11px !important;
+        margin-bottom: 7px !important;
+    }
+    .match-card {
+        padding: 8px 10px !important;
+        font-size: 12px !important;
+        margin-bottom: 7px !important;
+        box-sizing: border-box !important;
+    }
+    .match-card .team,
+    .match-card .team span:first-child {
+        font-size: 12px !important;
+    }
+    .match-card .team span:first-child {
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+    }
+    .match-card .score {
+        font-size: 12px !important;
     }
 
     /* Estilos de botones de navegación del Árbol/Cuadro en móvil */
@@ -1205,12 +1260,6 @@ body {
         background: #e11d48 !important;
         border-color: #e11d48 !important;
         color: #ffffff !important;
-    }
-
-    /* 1. Margen derecho seguro para que las tarjetas de partidos no rocen la orilla de la pantalla */
-    .match-card {
-        padding-right: 12px !important;
-        box-sizing: border-box !important;
     }
 
     /* 2. Estilo oscuro y borde para los botones de navegación del Árbol/Cuadro */
@@ -1386,5 +1435,43 @@ body {
     /* 3. Ocultar el tag suelto 'Vista de Ronda' en móvil para mantener la cabecera limpia */
     .cuadro-fase-header > div:last-child {
         display: none !important;
+    }
+}
+
+/* ==========================================================================
+   REFINAMIENTO ULTRA-COMPACTO MÓVIL (PANTALLAS <= 480px)
+   ========================================================================== */
+@media (max-width: 480px) {
+    .container {
+        padding: 6px 8px !important;
+    }
+    .header {
+        padding: 8px 10px !important;
+    }
+    .sports-bar {
+        padding: 8px 8px 4px 8px !important;
+        gap: 3px !important;
+    }
+    .sport-btn {
+        font-size: 10px !important;
+        padding: 4px 7px !important;
+    }
+    .date-item {
+        min-width: 42px !important;
+        padding: 3px 2px !important;
+    }
+    .date-nav-btn {
+        font-size: 16px !important;
+        padding: 2px 4px !important;
+    }
+    .torneo-header-clickable {
+        padding: 8px 10px !important;
+    }
+    .match-card {
+        padding: 7px 9px !important;
+    }
+    .sub-tab-btn {
+        padding: 7px 8px !important;
+        font-size: 10.5px !important;
     }
 }
