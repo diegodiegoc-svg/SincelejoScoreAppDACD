@@ -111,7 +111,10 @@ function aplicarRestriccionesPlanillero(torneoIdAsignado) {
     }
 }
 
-const API_URL = 'https://apisincelejoscore-production.up.railway.app/api';
+// Detección automática de entorno (Local vs Producción)
+const API_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+    ? 'http://localhost:5291/api'
+    : 'https://apisincelejoscore-production.up.railway.app/api';
 
 // Estado global de la aplicación administrativa
 const state = {
@@ -1022,8 +1025,11 @@ document.getElementById('form-torneo')?.addEventListener('submit', async (e) => 
     const payload = {
         id: id ? parseInt(id) : 0,
         nombre: nombre,
+        deporteId: deporteId,
         deporte_id: deporteId,
+        canchaSedeId: canchaSedeId,
         cancha_sede_id: canchaSedeId,
+        esMulticancha: esMulticancha,
         es_multicancha: esMulticancha,
         temporada: temporada
     };
@@ -1836,8 +1842,7 @@ function esFechaPorDefinir(fh) {
 }
 
 function formatearFechaHora(fechaIso) {
-    if (!fechaIso) return '-';
-    if (esFechaPorDefinir(fechaIso)) return 'Por definir';
+    if (!fechaIso || esFechaPorDefinir(fechaIso)) return `<span style="background: #2a2024; color: #f59e0b; border: 1px solid #d97706; padding: 2px 7px; border-radius: 4px; font-size: 11px; font-weight: 800; display: inline-flex; align-items: center; gap: 4px;">⏳ POR DEFINIR</span>`;
     try {
         const d = parsearFechaHoraLocal(fechaIso);
         if (!d || isNaN(d.getTime())) return fechaIso;

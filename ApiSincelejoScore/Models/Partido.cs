@@ -15,7 +15,7 @@ namespace ApiSincelejoScore.Models
         public string Estado { get; set; } = "PROGRAMADO"; // PROGRAMADO, EN_JUEGO, FINALIZADO, CANCELADO
         public string? EstadoDetalle { get; set; }
         public int? MinutoActual { get; set; }
-        public DateTime FechaHora { get; set; }
+        public DateTime? FechaHora { get; set; }
 
         // Propiedades enriquecidas de visualización (mediante JOIN)
         public string? EquipoLocalNombre { get; set; }

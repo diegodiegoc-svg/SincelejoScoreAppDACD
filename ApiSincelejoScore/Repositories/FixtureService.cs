@@ -97,7 +97,7 @@ namespace ApiSincelejoScore.Repositories
                                 PuntosVisitante = 0,
                                 Estado = "PROGRAMADO",
                                 EstadoDetalle = "PROGRAMADO",
-                                FechaHora = DateTime.Now
+                                FechaHora = null
                             });
                         }
                     }

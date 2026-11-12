@@ -1,4 +1,7 @@
-const API_URL = 'https://apisincelejoscore-production.up.railway.app/api';
+// Detección automática de entorno (Local vs Producción)
+const API_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+    ? 'http://localhost:5291/api'
+    : 'https://apisincelejoscore-production.up.railway.app/api';
 
 let listaDeportes = [];
 let listaTorneos = [];

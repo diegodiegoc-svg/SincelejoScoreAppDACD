@@ -3,16 +3,10 @@
  * Conexión con endpoint POST /api/auth/login
  */
 
-// URL base de la API: intenta primero variable global, luego local si es localhost, o producción Railway
-const API_URL = (() => {
-    if (window.API_URL) return window.API_URL;
-    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-        const param = new URLSearchParams(window.location.search).get('api');
-        if (param) return param;
-        return 'http://localhost:5291/api';
-    }
-    return 'https://apisincelejoscore-production.up.railway.app/api';
-})();
+// Detección automática de entorno (Local vs Producción)
+const API_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+    ? 'http://localhost:5291/api'
+    : 'https://apisincelejoscore-production.up.railway.app/api';
 
 document.addEventListener('DOMContentLoaded', () => {
     const formLogin = document.getElementById('form-login');
