@@ -1958,7 +1958,12 @@ document.getElementById('btn-sincronizar-playoffs-tabla')?.addEventListener('cli
 });
 
 function limpiarFormPartido() {
-    document.getElementById('partido-id').value = '';
+    const inputId = document.getElementById('partido-id');
+    if (inputId) {
+        inputId.value = '';
+        delete inputId.dataset.puntosLocal;
+        delete inputId.dataset.puntosVisitante;
+    }
     document.getElementById('partido-jornada').value = '1';
     document.getElementById('partido-local').value = '';
     document.getElementById('partido-visitante').value = '';
@@ -1995,6 +2000,29 @@ document.getElementById('form-partido')?.addEventListener('submit', async (e) =>
         return;
     }
 
+    // Si se está editando un partido existente (id > 0), conservar los puntos actuales de BD / memoria
+    let puntosLocalActual = 0;
+    let puntosVisitanteActual = 0;
+
+    if (id) {
+        const inputId = document.getElementById('partido-id');
+        if (inputId && inputId.dataset.puntosLocal !== undefined && inputId.dataset.puntosVisitante !== undefined) {
+            puntosLocalActual = Number(inputId.dataset.puntosLocal) || 0;
+            puntosVisitanteActual = Number(inputId.dataset.puntosVisitante) || 0;
+        } else {
+            try {
+                const resActual = await fetch(`${API_URL}/partidos/${id}`);
+                if (resActual.ok) {
+                    const pActual = await resActual.json();
+                    puntosLocalActual = Number(pActual.puntosLocal ?? pActual.PuntosLocal ?? pActual.puntos_local ?? 0);
+                    puntosVisitanteActual = Number(pActual.puntosVisitante ?? pActual.PuntosVisitante ?? pActual.puntos_visitante ?? 0);
+                }
+            } catch (errPre) {
+                console.warn('No se pudo consultar el marcador previo del partido:', errPre);
+            }
+        }
+    }
+
     const payload = {
         id: id ? parseInt(id) : 0,
         torneoId: torneoId,
@@ -2005,8 +2033,8 @@ document.getElementById('form-partido')?.addEventListener('submit', async (e) =>
         fechaHora: (fechaHora.length === 16 ? `${fechaHora}:00` : fechaHora),
         estado: estado,
         estadoDetalle: (estado === 'FINALIZADO') ? 'FINALIZADO' : (estado === 'EN_JUEGO' ? '1T' : 'PROGRAMADO'),
-        puntosLocal: 0,
-        puntosVisitante: 0,
+        puntosLocal: id ? puntosLocalActual : 0,
+        puntosVisitante: id ? puntosVisitanteActual : 0,
         minutoActual: (estado === 'EN_JUEGO') ? 1 : null
     };
 
@@ -2051,7 +2079,10 @@ window.editarPartidoManual = async function(id) {
         container.classList.remove('hidden');
         document.getElementById('partido-form-title').textContent = `✏️ Editando Partido #${id}`;
 
-        document.getElementById('partido-id').value = id;
+        const inputId = document.getElementById('partido-id');
+        inputId.value = id;
+        inputId.dataset.puntosLocal = (p.puntosLocal ?? p.PuntosLocal ?? p.puntos_local ?? 0);
+        inputId.dataset.puntosVisitante = (p.puntosVisitante ?? p.PuntosVisitante ?? p.puntos_visitante ?? 0);
         document.getElementById('partido-jornada').value = p.jornada || p.Jornada || 1;
         document.getElementById('partido-local').value = p.equipoLocalId || p.EquipoLocalId;
         document.getElementById('partido-visitante').value = p.equipoVisitanteId || p.EquipoVisitanteId;
