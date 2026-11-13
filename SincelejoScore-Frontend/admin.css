@@ -667,6 +667,93 @@ select.form-control option {
         overflow-x: hidden !important;
     }
 
+    /* Header Administrativo Responsivo para Móviles */
+    .admin-header {
+        padding: 10px 12px !important;
+        flex-wrap: wrap !important;
+        gap: 8px !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        box-sizing: border-box !important;
+        width: 100% !important;
+    }
+
+    .admin-header .logo {
+        font-size: 15px !important;
+        display: flex !important;
+        align-items: center !important;
+        flex-wrap: wrap !important;
+        gap: 4px !important;
+        line-height: 1.2 !important;
+    }
+
+    .admin-header .logo span[style*="PANEL DE ADMINISTRACIÓN"] {
+        font-size: 10.5px !important;
+        margin-left: 2px !important;
+        display: inline-block !important;
+    }
+
+    .admin-header-actions {
+        width: 100% !important;
+        display: flex !important;
+        flex-wrap: wrap !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 6px !important;
+        margin-top: 2px !important;
+    }
+
+    #panel-user-info,
+    .panel-user-info {
+        display: inline-flex !important;
+        align-items: center !important;
+        flex-wrap: wrap !important;
+        gap: 6px !important;
+        padding: 5px 8px !important;
+        background: #141418 !important;
+        border-radius: 6px !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    #nombre-usuario-sesion,
+    .nombre-usuario-sesion {
+        max-width: 110px !important;
+        font-size: 11.5px !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+    }
+
+    #rol-usuario-sesion,
+    .rol-usuario-sesion {
+        font-size: 10px !important;
+        padding: 2px 5px !important;
+    }
+
+    #btn-logout,
+    .btn-logout {
+        padding: 5px 9px !important;
+        font-size: 11.5px !important;
+        min-height: 32px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        white-space: nowrap !important;
+        flex-shrink: 0 !important;
+        cursor: pointer !important;
+        touch-action: manipulation !important;
+        border-radius: 5px !important;
+    }
+
+    .admin-nav-public-btn {
+        font-size: 11.5px !important;
+        padding: 6px 10px !important;
+        white-space: nowrap !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        flex-shrink: 0 !important;
+    }
+
     .admin-container {
         padding: 8px !important;
         width: 100% !important;
@@ -793,6 +880,24 @@ select.form-control option {
     #mesa-container-minuto, #mesa-container-outs {
         width: 100% !important;
         box-sizing: border-box !important;
+    }
+
+    @media (max-width: 480px) {
+        .admin-header-actions {
+            flex-direction: column !important;
+            align-items: stretch !important;
+            gap: 6px !important;
+        }
+        #panel-user-info,
+        .panel-user-info {
+            width: 100% !important;
+            justify-content: space-between !important;
+        }
+        .admin-nav-public-btn {
+            width: 100% !important;
+            justify-content: center !important;
+            text-align: center !important;
+        }
     }
 }
 
