@@ -3,6 +3,28 @@ using ApiSincelejoScore.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Soporte automático para variables de entorno de producción (Railway MYSQL_URL / DATABASE_URL)
+var mysqlUrl = Environment.GetEnvironmentVariable("MYSQL_URL") ?? Environment.GetEnvironmentVariable("DATABASE_URL");
+if (!string.IsNullOrEmpty(mysqlUrl))
+{
+    try
+    {
+        var uri = new Uri(mysqlUrl);
+        var userInfo = uri.UserInfo.Split(':');
+        var user = userInfo[0];
+        var password = userInfo.Length > 1 ? userInfo[1] : "";
+        var host = uri.Host;
+        var port = uri.Port > 0 ? uri.Port : 3306;
+        var database = uri.AbsolutePath.TrimStart('/');
+        builder.Configuration["ConnectionStrings:DefaultConnection"] = 
+            $"Server={host};Port={port};Database={database};Uid={user};Pwd={password};";
+    }
+    catch
+    {
+        // Si no es una URL parseable, se mantiene la configuración existente
+    }
+}
+
 Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
 // 1. Agregar servicios
