@@ -65,16 +65,21 @@ function aplicarInfoSesionYRoles() {
     document.getElementById('btn-logout')?.addEventListener('click', cerrarSesion);
 
     // Adaptación según el Rol
+    const tabUsuariosBtn = document.getElementById('nav-tab-usuarios') || document.querySelector('[data-tab="tab-usuarios"]');
     if (rol === 'SUPERADMIN') {
         // Flujo normal: todas las pestañas visibles y selectores habilitados
-    } else if (rol === 'PLANILLERO') {
-        aplicarRestriccionesPlanillero(torneoIdAsignado);
+        if (tabUsuariosBtn) tabUsuariosBtn.style.display = 'inline-flex';
+    } else {
+        if (tabUsuariosBtn) tabUsuariosBtn.style.display = 'none';
+        if (rol === 'PLANILLERO') {
+            aplicarRestriccionesPlanillero(torneoIdAsignado);
+        }
     }
 }
 
 function aplicarRestriccionesPlanillero(torneoIdAsignado) {
     // 1. Ocultar de la barra de pestañas los módulos ajenos al planillero
-    const tabsAOcultar = ['tab-torneos', 'tab-equipos', 'tab-deportes'];
+    const tabsAOcultar = ['tab-torneos', 'tab-equipos', 'tab-deportes', 'tab-usuarios'];
     document.querySelectorAll('.admin-tab-btn').forEach(btn => {
         const tab = btn.getAttribute('data-tab');
         if (tabsAOcultar.includes(tab)) {
@@ -477,6 +482,8 @@ function cambiarPestana(targetTabId) {
         }
     } else if (targetTabId === 'tab-deportes') {
         cargarDeportesAdmin();
+    } else if (targetTabId === 'tab-usuarios') {
+        cargarUsuariosAdmin();
     }
 }
 
@@ -925,6 +932,15 @@ function poblarSelectsTorneo(torneos) {
         excelTor.innerHTML = '<option value="">-- Selecciona el Torneo --</option>' +
             torneos.map(t => `<option value="${t.id || t.Id}">${t.nombre || t.Nombre} (${obtenerNombreDeporte(t)})</option>`).join('');
         if (valorActual) excelTor.value = valorActual;
+    }
+
+    // 5. Select en Módulo Usuarios y Planilleros
+    const usrTor = document.getElementById('usuario-torneo-asignar');
+    if (usrTor) {
+        const valorActual = usrTor.value;
+        usrTor.innerHTML = '<option value="">-- Sin Torneo / No Aplica --</option>' +
+            torneos.map(t => `<option value="${t.id || t.Id}">${t.nombre || t.Nombre} (${obtenerNombreDeporte(t)})</option>`).join('');
+        if (valorActual) usrTor.value = valorActual;
     }
 }
 
@@ -9452,3 +9468,342 @@ async function procesarAvancePlayoff(partido, ptsLoc, ptsVis) {
         console.error('Error procesando avance en playoff:', e);
     }
 }
+
+// ============================================================================
+// MÓDULO 6: GESTIÓN DE USUARIOS Y PLANILLEROS (SUPERADMIN)
+// ============================================================================
+
+let listaUsuariosAdmin = [];
+
+async function cargarUsuariosAdmin() {
+    const tbody = document.getElementById('tabla-usuarios-body');
+    if (!tbody) return;
+
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: #888; padding: 20px;">⏳ Cargando lista de usuarios y planilleros...</td></tr>`;
+
+    try {
+        const res = await fetch(`${API_URL}/auth/usuarios`);
+        if (!res.ok) {
+            throw new Error(`Error ${res.status}: No se pudo obtener la lista de usuarios.`);
+        }
+        listaUsuariosAdmin = await res.json();
+        renderizarTablaUsuariosAdmin(listaUsuariosAdmin);
+    } catch (err) {
+        console.error('Error cargando usuarios:', err);
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: #ff0044; padding: 20px;">⚠️ Error cargando usuarios: ${err.message}</td></tr>`;
+        mostrarToast('Error al cargar lista de usuarios.', 'error');
+    }
+}
+
+function renderizarTablaUsuariosAdmin(usuarios) {
+    const tbody = document.getElementById('tabla-usuarios-body');
+    if (!tbody) return;
+
+    if (!usuarios || usuarios.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: #888; padding: 20px;">No hay usuarios registrados.</td></tr>`;
+        return;
+    }
+
+    tbody.innerHTML = usuarios.map((u, index) => {
+        const uId = u.id || u.Id;
+        const username = u.username || u.Username || '';
+        const nombre = u.nombreCompleto || u.NombreCompleto || '';
+        const rol = (u.rol || u.Rol || 'PLANILLERO').toUpperCase();
+        const tId = u.torneoId ?? u.TorneoId;
+        const tNombre = u.torneoNombre || u.TorneoNombre;
+        const activo = (u.activo ?? u.Activo) !== false && (u.activo ?? u.Activo) !== 0 && (u.activo ?? u.Activo) !== '0';
+
+        const rolBadge = (rol === 'SUPERADMIN')
+            ? `<span class="rol-usuario-sesion rol-superadmin" style="font-size: 10px; font-weight: 800;">⚡ SUPERADMIN</span>`
+            : `<span class="rol-usuario-sesion rol-planillero" style="font-size: 10px; font-weight: 800;">⏱️ PLANILLERO</span>`;
+
+        let torneoTexto = '<span style="color: #64748b; font-style: italic;">No aplica (Global)</span>';
+        if (rol === 'PLANILLERO') {
+            if (tNombre) {
+                torneoTexto = `<strong style="color: #38bdf8;">${tNombre}</strong> <span style="font-size: 10px; color: #64748b;">(#${tId})</span>`;
+            } else if (tId) {
+                const torEncontrado = (state.torneos || []).find(t => (t.id || t.Id) == tId);
+                const nombreTor = torEncontrado ? (torEncontrado.nombre || torEncontrado.Nombre) : `Torneo #${tId}`;
+                torneoTexto = `<strong style="color: #38bdf8;">${nombreTor}</strong>`;
+            } else {
+                torneoTexto = '<span style="color: #f59e0b;">⚠️ Sin Asignar</span>';
+            }
+        }
+
+        const estadoBadge = activo
+            ? `<span class="badge-status badge-finalizado" style="font-size: 10.5px; padding: 2px 7px;">Activo</span>`
+            : `<span class="badge-status badge-suspendido" style="font-size: 10.5px; padding: 2px 7px;">Inactivo</span>`;
+
+        const esAdminPrincipal = (uId === 1 || username.toLowerCase() === 'admin');
+
+        return `
+            <tr>
+                <td style="color: #888; font-weight: bold;">${index + 1}</td>
+                <td><strong style="color: #fff;">${username}</strong></td>
+                <td>${nombre}</td>
+                <td>${rolBadge}</td>
+                <td>${torneoTexto}</td>
+                <td>${estadoBadge}</td>
+                <td style="text-align: center; white-space: nowrap;">
+                    <button class="btn-action-edit" onclick="editarUsuarioAdmin(${uId})" title="Editar usuario y rol" style="margin-right: 4px;">
+                        ✏️ Editar
+                    </button>
+                    <button class="btn-secondary" onclick="cambiarPasswordUsuarioRapido(${uId}, '${username}')" title="Actualizar contraseña" style="font-size: 11px; padding: 4px 8px; margin-right: 4px;">
+                        🔑 Clave
+                    </button>
+                    <button class="btn-secondary" onclick="alternarEstadoUsuarioAdmin(${uId}, ${activo ? 'false' : 'true'})" title="${activo ? 'Desactivar usuario' : 'Activar usuario'}" style="font-size: 11px; padding: 4px 8px; margin-right: 4px; color: ${activo ? '#f59e0b' : '#10b981'};">
+                        ${activo ? '⏸️ Bloquear' : '▶️ Activar'}
+                    </button>
+                    ${esAdminPrincipal ? '' : `
+                        <button class="btn-action-delete" onclick="eliminarUsuarioAdmin(${uId}, '${username}')" title="Eliminar usuario">
+                            🗑️
+                        </button>
+                    `}
+                </td>
+            </tr>
+        `;
+    }).join('');
+}
+
+function limpiarFormUsuario() {
+    const inputId = document.getElementById('usuario-id');
+    if (inputId) inputId.value = '';
+
+    const inputUser = document.getElementById('usuario-username');
+    if (inputUser) {
+        inputUser.value = '';
+        inputUser.disabled = false;
+    }
+
+    const inputNom = document.getElementById('usuario-nombre-completo');
+    if (inputNom) inputNom.value = '';
+
+    const inputPass = document.getElementById('usuario-password');
+    if (inputPass) {
+        inputPass.value = '';
+        inputPass.required = true;
+    }
+
+    const selRol = document.getElementById('usuario-rol');
+    if (selRol) selRol.value = 'PLANILLERO';
+
+    const selTor = document.getElementById('usuario-torneo-asignar');
+    if (selTor) selTor.value = '';
+
+    const selActivo = document.getElementById('usuario-activo');
+    if (selActivo) selActivo.value = '1';
+
+    const labelHelp = document.getElementById('label-password-help');
+    if (labelHelp) labelHelp.textContent = '';
+
+    const btnSubmit = document.getElementById('btn-guardar-usuario');
+    if (btnSubmit) btnSubmit.innerHTML = '💾 Guardar Usuario';
+
+    const titulo = document.getElementById('titulo-form-usuario');
+    if (titulo) titulo.innerHTML = '👤 Registrar Nuevo Usuario / Planillero';
+}
+
+function editarUsuarioAdmin(id) {
+    const usuario = listaUsuariosAdmin.find(u => (u.id || u.Id) == id);
+    if (!usuario) return;
+
+    document.getElementById('usuario-id').value = id;
+    document.getElementById('usuario-username').value = usuario.username || usuario.Username || '';
+    document.getElementById('usuario-nombre-completo').value = usuario.nombreCompleto || usuario.NombreCompleto || '';
+    
+    const inputPass = document.getElementById('usuario-password');
+    inputPass.value = '';
+    inputPass.required = false;
+    
+    const labelHelp = document.getElementById('label-password-help');
+    if (labelHelp) labelHelp.textContent = '(Opcional: déjala vacía para conservar la actual)';
+
+    const rol = (usuario.rol || usuario.Rol || 'PLANILLERO').toUpperCase();
+    document.getElementById('usuario-rol').value = rol;
+
+    const selTor = document.getElementById('usuario-torneo-asignar');
+    const tId = usuario.torneoId ?? usuario.TorneoId ?? '';
+    if (selTor) selTor.value = tId;
+
+    const activo = (usuario.activo ?? usuario.Activo) !== false && (usuario.activo ?? usuario.Activo) !== 0 && (usuario.activo ?? usuario.Activo) !== '0';
+    document.getElementById('usuario-activo').value = activo ? '1' : '0';
+
+    const btnSubmit = document.getElementById('btn-guardar-usuario');
+    if (btnSubmit) btnSubmit.innerHTML = `💾 Actualizar Usuario #${id}`;
+
+    const titulo = document.getElementById('titulo-form-usuario');
+    if (titulo) titulo.innerHTML = `✏️ Editando Usuario: ${usuario.username || usuario.Username}`;
+
+    document.getElementById('form-usuario-admin')?.scrollIntoView({ behavior: 'smooth' });
+}
+
+async function alternarEstadoUsuarioAdmin(id, nuevoEstado) {
+    try {
+        const payload = { activo: Boolean(nuevoEstado) };
+        const res = await fetch(`${API_URL}/auth/usuarios/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        if (!res.ok) {
+            const err = await res.json().catch(() => ({}));
+            throw new Error(err.mensaje || 'Error al cambiar estado');
+        }
+
+        mostrarToast(`Usuario #${id} ${nuevoEstado ? 'activado' : 'bloqueado'} con éxito.`, 'exito');
+        await cargarUsuariosAdmin();
+    } catch (e) {
+        console.error('Error al cambiar estado:', e);
+        mostrarToast(e.message, 'error');
+    }
+}
+
+async function cambiarPasswordUsuarioRapido(id, username) {
+    const nuevaClave = prompt(`Ingresa la nueva contraseña para el usuario '${username}':`);
+    if (nuevaClave === null) return;
+    if (!nuevaClave.trim()) {
+        mostrarToast('La contraseña no puede estar vacía.', 'error');
+        return;
+    }
+
+    try {
+        const payload = { password: nuevaClave.trim() };
+        const res = await fetch(`${API_URL}/auth/usuarios/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        if (!res.ok) {
+            const err = await res.json().catch(() => ({}));
+            throw new Error(err.mensaje || 'Error al actualizar contraseña');
+        }
+
+        mostrarToast(`🔐 Contraseña de '${username}' actualizada exitosamente.`, 'exito');
+    } catch (e) {
+        console.error('Error actualizando contraseña:', e);
+        mostrarToast(e.message, 'error');
+    }
+}
+
+async function eliminarUsuarioAdmin(id, username) {
+    const ok = await mostrarConfirmacionModal(
+        `¿Estás seguro de eliminar permanentemente al usuario '${username}'?\nEsta acción no se puede deshacer.`,
+        '🗑️ Eliminar Usuario'
+    );
+    if (!ok) return;
+
+    try {
+        const res = await fetch(`${API_URL}/auth/usuarios/${id}`, {
+            method: 'DELETE'
+        });
+
+        if (!res.ok) {
+            const err = await res.json().catch(() => ({}));
+            throw new Error(err.mensaje || 'No se pudo eliminar el usuario');
+        }
+
+        mostrarToast(`Usuario '${username}' eliminado correctamente.`, 'exito');
+        limpiarFormUsuario();
+        await cargarUsuariosAdmin();
+    } catch (e) {
+        console.error('Error eliminando usuario:', e);
+        mostrarToast(e.message, 'error');
+    }
+}
+
+// Envío del Formulario de Usuario (Crear o Actualizar)
+document.getElementById('form-usuario-admin')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const id = document.getElementById('usuario-id').value;
+    const username = document.getElementById('usuario-username').value.trim();
+    const nombreCompleto = document.getElementById('usuario-nombre-completo').value.trim();
+    const password = document.getElementById('usuario-password').value;
+    const rol = document.getElementById('usuario-rol').value;
+    const torneoIdVal = document.getElementById('usuario-torneo-asignar').value;
+    const activoVal = document.getElementById('usuario-activo').value === '1';
+
+    if (!username || !nombreCompleto) {
+        mostrarToast('Por favor completa el usuario y nombre completo.', 'error');
+        return;
+    }
+
+    if (!id && !password) {
+        mostrarToast('La contraseña es obligatoria para nuevos usuarios.', 'error');
+        return;
+    }
+
+    const torneoId = (rol === 'PLANILLERO' && torneoIdVal) ? parseInt(torneoIdVal) : null;
+
+    try {
+        let res;
+        if (id) {
+            const payloadPut = {
+                username: username,
+                nombreCompleto: nombreCompleto,
+                rol: rol,
+                torneoId: torneoId,
+                activo: activoVal
+            };
+            if (password && password.trim()) {
+                payloadPut.password = password.trim();
+            }
+
+            res = await fetch(`${API_URL}/auth/usuarios/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payloadPut)
+            });
+        } else {
+            const payloadPost = {
+                username: username,
+                password: password.trim(),
+                nombreCompleto: nombreCompleto,
+                rol: rol,
+                torneoId: torneoId,
+                activo: activoVal
+            };
+
+            res = await fetch(`${API_URL}/auth/usuarios`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payloadPost)
+            });
+        }
+
+        if (!res.ok) {
+            const err = await res.json().catch(() => ({}));
+            throw new Error(err.mensaje || 'Error al procesar usuario.');
+        }
+
+        mostrarToast(id ? `Usuario '${username}' actualizado exitosamente.` : `Usuario '${username}' creado con éxito.`, 'exito');
+        limpiarFormUsuario();
+        await cargarUsuariosAdmin();
+    } catch (err) {
+        console.error('Error guardando usuario:', err);
+        mostrarToast(err.message, 'error');
+    }
+});
+
+// Evento para deshabilitar selector de torneo si el rol es SUPERADMIN
+document.getElementById('usuario-rol')?.addEventListener('change', (e) => {
+    const rol = e.target.value;
+    const grupoTorneo = document.getElementById('grupo-torneo-asignado');
+    const selTorneo = document.getElementById('usuario-torneo-asignar');
+    if (rol === 'SUPERADMIN') {
+        if (selTorneo) selTorneo.value = '';
+        if (grupoTorneo) grupoTorneo.style.opacity = '0.4';
+    } else {
+        if (grupoTorneo) grupoTorneo.style.opacity = '1';
+    }
+});
+
+window.cargarUsuariosAdmin = cargarUsuariosAdmin;
+window.limpiarFormUsuario = limpiarFormUsuario;
+window.editarUsuarioAdmin = editarUsuarioAdmin;
+window.alternarEstadoUsuarioAdmin = alternarEstadoUsuarioAdmin;
+window.cambiarPasswordUsuarioRapido = cambiarPasswordUsuarioRapido;
+window.eliminarUsuarioAdmin = eliminarUsuarioAdmin;
+

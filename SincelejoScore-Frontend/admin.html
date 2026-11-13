@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel de Administración - SincelejoScore</title>
-    <link rel="stylesheet" href="styles.css?v=4.2">
-    <link rel="stylesheet" href="admin.css?v=4.2">
+    <link rel="stylesheet" href="styles.css?v=4.3">
+    <link rel="stylesheet" href="admin.css?v=4.3">
 </head>
 <body>
 
@@ -38,6 +38,7 @@
         <button class="admin-tab-btn" data-tab="tab-fixture">📅 3. Programación y Fixture</button>
         <button class="admin-tab-btn" data-tab="tab-mesa">⏱️ 4. Mesa Técnica en Vivo</button>
         <button class="admin-tab-btn" data-tab="tab-deportes">🏅 5. Deportes</button>
+        <button class="admin-tab-btn" data-tab="tab-usuarios" id="nav-tab-usuarios">👥 6. Usuarios y Planilleros</button>
     </nav>
 
     <!-- Contenedor Principal -->
@@ -818,6 +819,91 @@
             </div>
         </section>
 
+        <!-- ===================================================================
+             PESTAÑA 6: GESTIÓN DE USUARIOS Y PLANILLEROS (SUPERADMIN)
+             =================================================================== -->
+        <section id="tab-usuarios" class="admin-tab-pane hidden">
+            <!-- Formulario Crear/Editar Usuario -->
+            <div class="admin-card">
+                <div class="admin-card-header">
+                    <h2 id="titulo-form-usuario" style="color: #ff0044; display: flex; align-items: center; gap: 8px;">
+                        👤 Registrar Nuevo Usuario / Planillero
+                    </h2>
+                </div>
+                <form id="form-usuario-admin">
+                    <input type="hidden" id="usuario-id">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="usuario-username">Nombre de Usuario (Login) *</label>
+                            <input type="text" id="usuario-username" class="form-control" placeholder="Ej. planillero_futbol" required autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label for="usuario-nombre-completo">Nombre Completo *</label>
+                            <input type="text" id="usuario-nombre-completo" class="form-control" placeholder="Ej. Juan Pérez" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="usuario-password">Contraseña <span id="label-password-help" style="font-size: 11px; color: #888;">(Requerida al crear; vacía para no cambiar al editar)</span></label>
+                            <input type="password" id="usuario-password" class="form-control" placeholder="Contraseña segura" required autocomplete="new-password">
+                        </div>
+                        <div class="form-group">
+                            <label for="usuario-rol">Rol en el Sistema *</label>
+                            <select id="usuario-rol" class="form-control" required>
+                                <option value="PLANILLERO" selected>PLANILLERO (Mesa Técnica asignada)</option>
+                                <option value="SUPERADMIN">SUPERADMIN (Acceso Total)</option>
+                            </select>
+                        </div>
+                        <div class="form-group" id="grupo-torneo-asignado">
+                            <label for="usuario-torneo-asignar">Torneo Asignado (Mesa Técnica)</label>
+                            <select id="usuario-torneo-asignar" class="form-control">
+                                <option value="">-- Sin Torneo / No Aplica --</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="usuario-activo">Estado de Acceso</label>
+                            <select id="usuario-activo" class="form-control">
+                                <option value="1" selected>Activo (Habilitado)</option>
+                                <option value="0">Inactivo (Bloqueado)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 10px; margin-top: 15px;">
+                        <button type="submit" class="btn-primary" id="btn-guardar-usuario">💾 Guardar Usuario</button>
+                        <button type="button" class="btn-secondary" id="btn-cancelar-usuario" onclick="limpiarFormUsuario()">Cancelar / Limpiar</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Tabla de Usuarios Registrados -->
+            <div class="admin-card">
+                <div class="admin-card-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                    <h2>👥 Usuarios y Planilleros Registrados</h2>
+                    <button type="button" class="btn-secondary" onclick="cargarUsuariosAdmin()" style="font-size: 12px; padding: 6px 12px;">
+                        🔄 Refrescar Lista
+                    </button>
+                </div>
+                <div class="admin-table-wrapper">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Usuario</th>
+                                <th>Nombre Completo</th>
+                                <th>Rol</th>
+                                <th>Torneo Asignado</th>
+                                <th>Estado</th>
+                                <th style="text-align: center;">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-usuarios-body">
+                            <tr>
+                                <td colspan="7" style="text-align: center; color: #888; padding: 20px;">Cargando usuarios...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
     </main>
 
     <!-- ===================================================================
@@ -1087,6 +1173,6 @@
     </div>
 
     <!-- Scripts -->
-    <script src="admin.js?v=4.2"></script>
+    <script src="admin.js?v=4.3"></script>
 </body>
 </html>
