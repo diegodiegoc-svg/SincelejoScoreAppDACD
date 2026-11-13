@@ -834,21 +834,34 @@ select.form-control option {
         justify-content: space-between !important;
     }
     .mesa-teams-grid {
-        display: flex !important;
-        flex-direction: row !important;
-        justify-content: space-between !important;
-        align-items: flex-start !important;
-        gap: 4px !important;
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        grid-template-areas:
+            "local visitante"
+            "centro centro" !important;
+        gap: 14px 10px !important;
+        align-items: start !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
     }
-    .mesa-team-col {
-        flex: 1 1 30% !important;
-        min-width: 0 !important;
-        padding: 2px !important;
+    .mesa-team-col:first-of-type {
+        grid-area: local !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        padding: 4px !important;
+        text-align: center !important;
+    }
+    .mesa-team-col:last-of-type {
+        grid-area: visitante !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        padding: 4px !important;
         text-align: center !important;
     }
     .mesa-team-name {
-        font-size: 13px !important;
-        line-height: 1.2 !important;
+        font-size: 13.5px !important;
+        font-weight: 800 !important;
+        line-height: 1.25 !important;
         word-break: break-word !important;
         display: -webkit-box !important;
         -webkit-line-clamp: 2 !important;
@@ -856,30 +869,72 @@ select.form-control option {
         overflow: hidden !important;
     }
     .mesa-big-score {
-        font-size: 2.2rem !important;
+        font-size: 2.6rem !important;
         line-height: 1 !important;
-        margin: 4px 0 !important;
+        margin: 6px 0 !important;
+        font-weight: 900 !important;
     }
     .mesa-score-btns {
         display: flex !important;
         flex-wrap: wrap !important;
         justify-content: center !important;
-        gap: 3px !important;
+        gap: 4px !important;
+        width: 100% !important;
     }
     .btn-score-adjust {
-        min-width: 32px !important;
-        height: 32px !important;
-        padding: 2px 4px !important;
-        font-size: 11px !important;
+        min-width: 36px !important;
+        height: 34px !important;
+        padding: 3px 6px !important;
+        font-size: 12px !important;
+        font-weight: 800 !important;
+        border-radius: 5px !important;
+        touch-action: manipulation !important;
     }
     .mesa-center-controls {
-        flex: 1 1 38% !important;
-        min-width: 0 !important;
-        padding: 0 4px !important;
+        grid-area: centro !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 10px !important;
+        padding: 12px 8px 6px 8px !important;
+        margin-top: 4px !important;
+        background: rgba(18, 18, 24, 0.6) !important;
+        border: 1px solid #2a2a34 !important;
+        border-radius: 8px !important;
     }
-    #mesa-container-minuto, #mesa-container-outs {
+    .mesa-center-controls > div,
+    .mesa-center-controls > #mesa-container-minuto,
+    .mesa-center-controls > #mesa-container-outs {
+        width: 100% !important;
+        max-width: 320px !important;
+        box-sizing: border-box !important;
+    }
+    .mesa-center-controls .form-control {
         width: 100% !important;
         box-sizing: border-box !important;
+        font-size: 12.5px !important;
+        padding: 6px 10px !important;
+    }
+    #mesa-container-minuto > div {
+        width: 100% !important;
+        display: flex !important;
+        gap: 4px !important;
+        align-items: center !important;
+    }
+    #mesa-minuto-actual {
+        flex: 1 1 auto !important;
+        font-size: 13.5px !important;
+        height: 34px !important;
+        text-align: center !important;
+    }
+    #mesa-container-minuto .btn-secondary {
+        min-height: 34px !important;
+        padding: 4px 8px !important;
+        font-size: 11.5px !important;
+        touch-action: manipulation !important;
     }
 
     @media (max-width: 480px) {
